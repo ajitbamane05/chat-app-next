@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  user_id    String       @id @default(uuid())
+  username   String       @unique
+  email      String       @unique
+  password   String
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  isAdmin    Boolean      @default(false)
+  membership RoomMember[]
+  Message    Message[]
+}
+
+model Room {
+  room_id   String       @id @default(uuid())
+  type      RoomType
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  name      String       @unique
+  messages  Message[]
+  members   RoomMember[]
+}
+
+model RoomMember {
+  roomMemberId String  @id @default(uuid())
+  user         User    @relation(fields: [userId], references: [user_id])
+  room         Room    @relation(fields: [roomId], references: [room_id])
+  userId       String
+  roomId       String
+  isAdmin      Boolean @default(false)
+  // @@id([userId, roomId])
+}
+
+model Message {
+  message_id String   @id @default(uuid())
+  content    String
+  mediaUrl   String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  senderId   String
+  read       Boolean @default(false)
+  sender     User     @relation(fields: [senderId], references: [user_id])
+  roomId     String
+  room       Room     @relation(fields: [roomId], references: [room_id])
+}
+
+model Session {
+  sessionId String @id @default(uuid())
+  userId    String
+  token     String @unique
+}
+
+enum RoomType {
+  DIRECT
+  GROUP
+}
