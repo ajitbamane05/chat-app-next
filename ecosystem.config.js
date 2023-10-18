@@ -36,7 +36,8 @@ module.exports = {
       path: '/home/ubuntu',
       'pre-deploy-local': '',
       'post-deploy': 'source ~/.nvm/nvm.sh && npm ci && npm run build && cd backend && npm ci && cd .. && pm2 reload ecosystem.config.js --env production',
-      'pre-setup': ''
+      'pre-setup': '',
+      'ssh-options': 'ForwardAgent=yes'
     }
   }
 };
