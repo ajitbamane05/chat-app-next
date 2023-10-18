@@ -4,7 +4,7 @@ module.exports = {
       name: 'nodeServer',
       script: 'npm',
       args: 'run dev',
-      cwd: '../chat-app-node',
+      cwd: './backend',
       env: {
         NODE_ENV: 'production'
       },
@@ -30,12 +30,12 @@ module.exports = {
     production: {
       user: 'ubuntu',
       key:'chat-app-key.pem',
-      host:'13.232.14.31',
+      host:'52.66.202.88',
       ref: 'origin/main',
       repo: 'git@github.com:ajitbamane05/chat-app-next.git',
       path: '/home/ubuntu',
       'pre-deploy-local': '',
-      'post-deploy': 'source ~/.nvm/nvm.sh && npm ci && npm run build && pm2 reload ecosystem.config.js --env production',
+      'post-deploy': 'source ~/.nvm/nvm.sh && npm ci && cd backend && npm ci && cd .. && npm run build && pm2 reload ecosystem.config.js --env production',
       'pre-setup': '',
       'ssh-options': 'ForwardAgent=yes'
     }

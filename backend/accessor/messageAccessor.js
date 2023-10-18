@@ -3,7 +3,6 @@ const prisma = require('../prisma-client')
 class MessageAccessor {
     constructor() {
         if (MessageAccessor.instance) {
-            console.log("cashed messages");
             return MessageAccessor.instance
         }
         MessageAccessor.instance = this;
