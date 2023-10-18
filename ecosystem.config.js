@@ -6,17 +6,17 @@ module.exports = {
       args: 'run dev',
       cwd: '../chat-app-node',
       env: {
-        NODE_ENV: 'development'
+        NODE_ENV: 'production'
       },
       interpreter: 'none'
     },
     {
       name: 'nextServer',
       script: 'npm',
-      args: 'run dev -- -p 3001',
+      args: 'start -- -p 3001',
       cwd: './',
       env: {
-        NODE_ENV: 'development'
+        NODE_ENV: 'production'
       },
       interpreter: 'none'
     },
