@@ -35,7 +35,7 @@ module.exports = {
       repo: 'git@github.com:ajitbamane05/chat-app-next.git',
       path: '/home/ubuntu',
       'pre-deploy-local': '',
-      'post-deploy': 'source ~/.nvm/nvm.sh && npm ci && npm run build && cd backend && npm ci && cd .. && pm2 reload ecosystem.config.js --env production',
+      'post-deploy': 'source ~/.nvm/nvm.sh && npm ci && cd backend && npm ci && cd .. && npm run build && pm2 reload ecosystem.config.js --env production',
       'pre-setup': '',
       'ssh-options': 'ForwardAgent=yes'
     }
