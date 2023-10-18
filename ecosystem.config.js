@@ -29,8 +29,8 @@ module.exports = {
   deploy: {
     production: {
       user: 'ubuntu',
-      key:"chat-app-key.pem",
-      host: '13.232.14.31',
+      key:'chat-app-key.pem',
+      host:'13.232.14.31',
       ref: 'origin/main',
       repo: 'git@github.com:ajitbamane05/chat-app-next.git',
       path: '/home/ubuntu',
