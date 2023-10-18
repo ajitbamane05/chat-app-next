@@ -3,7 +3,7 @@ module.exports = {
     {
       name: 'nodeServer',
       script: 'npm',
-      args: 'run dev',
+      args: 'run dev -- -p 3000',
       cwd: './backend',
       env: {
         NODE_ENV: 'production'
