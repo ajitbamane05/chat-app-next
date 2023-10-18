@@ -28,13 +28,14 @@ module.exports = {
 
   deploy: {
     production: {
-      user: 'SSH_USERNAME',
-      host: 'SSH_HOSTMACHINE',
-      ref: 'origin/master',
-      repo: 'GIT_REPOSITORY',
-      path: 'DESTINATION_PATH',
+      user: 'ubuntu',
+      key:"chat-app-key.pem",
+      host: '13.232.14.31',
+      ref: 'origin/main',
+      repo: 'git@github.com:ajitbamane05/chat-app-next.git',
+      path: '/home/ubuntu',
       'pre-deploy-local': '',
-      'post-deploy': 'npm install && pm2 reload ecosystem.config.js --env production',
+      'post-deploy': 'source ~/.nvm/nvm.sh && npm ci && npm run build && cd backend && npm ci && cd .. && pm2 reload ecosystem.config.js --env production',
       'pre-setup': ''
     }
   }
