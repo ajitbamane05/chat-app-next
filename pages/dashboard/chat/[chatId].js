@@ -22,7 +22,7 @@ const Chat = ({ senderId, chatId, chats, data, users, username, headers }) => {
         })
         setSocket(socketInstance);
         return () => {
-            socketInstance.emit('leaveRoom', chatId,senderId);
+            socketInstance.emit('leaveRoom', chatId, senderId);
             socketInstance.disconnect()
         }
     }, [])
@@ -76,33 +76,57 @@ export default Chat;
 
 export async function getServerSideProps(context) {
     const token = context.req.cookies.token || null;
-    const headers = {
-        'authorization': token
-    };
-    const actualToken = token.split(' ')[1]
-    const data1 = Jwt.verify(actualToken, process.env.SECRET)
-    const userId = data1.user_id
-    const username = data1.username
-    const chatId = context.params.chatId
-    const senderId = userId
-    const [res, chatResponse, usersData] = await Promise.all([axios.post('http://localhost:3000/api/room/getmembership', {
-        userId: userId
-    }, { headers: headers }),
-    axios.post('http://localhost:3000/api/chat/getchat', {
-        roomId: chatId
-    }, { headers: headers }),
-    axios.get('http://localhost:3000/api/user/getallusers', { headers: headers })
-    ])
-    const data = res.data  
-    const chats = chatResponse.data
-    const users = usersData.data
+    if (token) {
+        try {
+            const headers = {
+                'authorization': token
+            };
+            const actualToken = token.split(' ')[1]
+            const data1 = Jwt.verify(actualToken, process.env.SECRET)
 
-    return {
-        props: {
-            senderId,
-            chatId,
-            chats,
-            data, users, username, headers
+            const userId = data1.user_id
+            console.log(userId);
+            const username = data1.username
+            const chatId = context.params.chatId
+            console.log(chatId);
+            const senderId = userId
+            const [res, chatResponse, usersData] = await Promise.all([axios.post('http://localhost:3000/api/room/getmembership', {
+                userId: userId
+            }, { headers: headers }),
+            axios.post('http://localhost:3000/api/chat/getchat', {
+                roomId: chatId
+            }, { headers: headers }),
+            axios.get('http://localhost:3000/api/user/getallusers', { headers: headers })
+            ])
+            const data = res.data
+            const chats = chatResponse.data
+            const users = usersData.data
+            return {
+                props: {
+                    senderId,
+                    chatId,
+                    chats,
+                    data, users, username, headers
+                }
+            }
         }
+        catch (error) {
+            context.res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly');
+            return {
+                redirect: {
+                    destination: "/",
+                    permanent: false,
+                },
+            };
+        }
+    }
+    else {
+        context.res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly');
+        return {
+            redirect: {
+                destination: "/",
+                permanent: false,
+            },
+        };
     }
 }

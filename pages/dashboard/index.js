@@ -46,7 +46,7 @@ export async function getServerSideProps(context) {
     const actualToken = token.split(' ')[1]
     const data1 = Jwt.verify(actualToken, process.env.SECRET)
     const userId = data1.user_id
-    if (data1) {
+    try {
       const headers = {
         'authorization': token
       };
@@ -56,7 +56,6 @@ export async function getServerSideProps(context) {
       }, { headers: headers })
       const data = res.data
       console.log(data);
-
       const usersData = await axios.get('http://localhost:3000/api/user/getallusers', { headers: headers })
       const users = usersData.data
       return {
@@ -68,12 +67,23 @@ export async function getServerSideProps(context) {
       }
 
     }
+    catch (error) {
+      context.res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly');
+      return {
+        redirect: {
+          destination: "/",
+          permanent: false,
+        },
+      }
+    }
   }
-  return {
-    redirect: {
-      destination: "/",
-      permanent: false,
-    },
-  };
-
+  else {
+    context.res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly');
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
 }

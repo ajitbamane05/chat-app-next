@@ -1,6 +1,6 @@
-const RoomService = require('../service/roomService')
-const RoomMemberService = require('../service/roomMemberService')
-const MessageService = require('../service/messageService')
+const { RoomService } = require('../service')
+const { RoomMemberService } = require('../service')
+const { MessageService } = require('../service')
 
 async function creteRoom(req, res) {
     const { name, type, memberIds, userId } = req.body
@@ -13,7 +13,7 @@ async function creteRoom(req, res) {
     if (!memberIds) {
         return res.status(400).json({ message: "MemberIds not provided" })
     }
-    if(!userId){
+    if (!userId) {
         return res.status(400).json({ message: "UserId not provided!" })
     }
     if (type === "GROUP") {
@@ -62,8 +62,8 @@ async function deleteRoom(req, res) {
         return res.status(400).json({ message: "No room id given!" })
     }
     try {
-        const [deletedRoomMessages,deleteRoomMembers] = await Promise.all([MessageService.deleteRoomMessages(room_id),
-            RoomMemberService.deleteRoomMembers(room_id)])
+        const [deletedRoomMessages, deleteRoomMembers] = await Promise.all([MessageService.deleteRoomMessages(room_id),
+        RoomMemberService.deleteRoomMembers(room_id)])
         const deletedRoom = await RoomService.deleteRoom(room_id)
         return res.status(200).json({ message: "Room Deleted with room messages and room members!", deletedRoom })
     }

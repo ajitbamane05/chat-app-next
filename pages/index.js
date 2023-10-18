@@ -40,7 +40,7 @@ export default function Home() {
       if (res.status === 200) {
         const token = await res.headers['authorization'];
         localStorage.setItem('token', token);
-        Cookies.set('token', token, {path: '/'});
+        Cookies.set('token', token);
         router.push("/dashboard");
       }
       if (res.status === 401) {
@@ -142,23 +142,28 @@ export default function Home() {
 
 export async function getServerSideProps(context) {
   const token = context.req.cookies.token || null;
-
   if (token) {
-    const actualToken = token?.split(' ')[1]
-    console.log(actualToken);
-    const data1 = Jwt.verify(actualToken, process.env.SECRET)
-    if (data1) {
+    try {
+      const actualToken = token?.split(' ')[1]
+      console.log(actualToken);
+      const data1 = Jwt.verify(actualToken, process.env.SECRET)
+      if (data1) {
+        return {
+          redirect: {
+            destination: "/dashboard",
+            permanent: false,
+          },
+        };
+      }
+    }
+    catch (error) {
+      context.res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly');
       return {
-        redirect: {
-          destination: "/dashboard",
-          permanent: false,
-        },
+        props: {},
       };
     }
   }
-  else {
-    return {
-      props: {},
-    };
-  }
+  return {
+    props: {},
+  };
 }

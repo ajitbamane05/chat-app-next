@@ -1,9 +1,9 @@
-const UserService = require('../service/userService')
-const MessageService = require('../service/messageService')
-const RoomMemberService = require('../service/roomMemberService')
+const { UserService } = require('../service')
+const { MessageService } = require('../service')
+const { RoomMemberService } = require('../service')
 async function createNewUser(req, res) {
     const { username, email, password, isAdmin } = req.body;
-    
+
     if (!username) {
         return res.status(400).json({ message: 'Username not found' })
     }
@@ -16,7 +16,7 @@ async function createNewUser(req, res) {
     try {
         const user = await UserService.createNewUser(username, email, password)
         if (user.statusCode === 400) {
-            return res.status(user.statusCode).json({message:user.message})
+            return res.status(user.statusCode).json({ message: user.message })
         }
         return res.status(200).json({ message: "User created successfully.", user })
     }
@@ -28,7 +28,7 @@ async function createNewUser(req, res) {
 }
 async function createAdmin(req, res) {
     const { username, email, password } = req.body;
-    
+
     if (!username) {
         return res.status(400).json({ message: 'Username not found' })
     }
@@ -41,7 +41,7 @@ async function createAdmin(req, res) {
     try {
         const user = await UserService.createAdmin(username, email, password)
         if (user.statusCode === 400) {
-            return res.status(user.statusCode).json({message:user.message})
+            return res.status(user.statusCode).json({ message: user.message })
         }
         return res.status(200).json({ message: "Admin created successfully.", user })
     }
@@ -56,7 +56,7 @@ async function deleteUser(req, res) {
     if (!user_id) {
         return res.status(400).json({ message: "Id not provided" })
     }
-    if(!username){
+    if (!username) {
         return res.status(400).json({ message: "Username not provided" })
     }
     try {
@@ -65,8 +65,8 @@ async function deleteUser(req, res) {
         const deleteMemberships = await RoomMemberService.deleteMemberships(user_id)
 
         const deletedUser = await UserService.deleteUser(username)
-        if(deletedUser.statusCode==400){
-            return res.status(deletedUser.statusCode).json({message:deletedUser.message})
+        if (deletedUser.statusCode == 400) {
+            return res.status(deletedUser.statusCode).json({ message: deletedUser.message })
         }
         return res.status(200).json({ message: "User deleted successfully", deletedUser })
     }
@@ -76,18 +76,18 @@ async function deleteUser(req, res) {
 
 }
 
-async function getAllUsers(req,res){
-    try{
+async function getAllUsers(req, res) {
+    try {
         const users = await UserService.getAllUsers()
         return res.status(200).json(users)
     }
-    catch(error){
-        return res.status(400).json({message:"Error while fetching data!"})
+    catch (error) {
+        return res.status(400).json({ message: "Error while fetching data!" })
     }
 }
 
 
 
 module.exports = {
-    createNewUser, createAdmin, deleteUser,getAllUsers
+    createNewUser, createAdmin, deleteUser, getAllUsers
 }

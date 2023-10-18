@@ -1,4 +1,4 @@
-const UserAccessor = require('../accessor/userAccessor')
+const { UserAccessor } = require('../accessor')
 const bcrypt = require('bcrypt')
 
 async function createNewUser(username, email, password) {
@@ -29,18 +29,18 @@ async function createAdmin(username, email, password) {
 
 async function deleteUser(username) {
     const userExists = await UserAccessor.findByUsername(username)
-    if(userExists){
+    if (userExists) {
         return UserAccessor.deleteUser(username)
     }
-    else{
+    else {
         return { statusCode: 400, message: "User not exists with the given username!" }
     }
 }
 
-function getAllUsers(){
+function getAllUsers() {
     return UserAccessor.getAllUsers()
 }
 
 module.exports = {
-    createNewUser, createAdmin, deleteUser,getAllUsers
+    createNewUser, createAdmin, deleteUser, getAllUsers
 }

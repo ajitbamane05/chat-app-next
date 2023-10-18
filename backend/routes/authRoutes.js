@@ -1,5 +1,5 @@
 const express = require('express');
-const AuthHandler =  require('../handler/authHandler');
+const { AuthHandler } = require('../handler')
 const router = express.Router();
 
 router.post('/login', AuthHandler.login);

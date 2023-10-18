@@ -1,5 +1,5 @@
-const UserAccessor = require('../accessor/userAccessor');
-const SessionAccessor = require('../accessor/sessionAccessor')
+const { UserAccessor } = require('../accessor');
+const { SessionAccessor } = require('../accessor')
 const bcrypt = require('bcrypt')
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
@@ -24,7 +24,7 @@ async function login(username, password) {
 }
 
 function logout(userId, token) {
-    return SessionAccessor.removeSession(userId,token)
+    return SessionAccessor.removeSession(userId, token)
 }
 
 module.exports = {

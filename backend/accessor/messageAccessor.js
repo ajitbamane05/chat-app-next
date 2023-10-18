@@ -1,43 +1,53 @@
 const prisma = require('../prisma-client')
-
-function sendMessage(content, senderId, roomId) {
-    return prisma.message.create({
-        data: {
-            content, senderId, roomId
+// singleton pattern
+class MessageAccessor {
+    constructor() {
+        if (MessageAccessor.instance) {
+            console.log("cashed messages");
+            return MessageAccessor.instance
         }
-    })
-}
+        MessageAccessor.instance = this;
+    }
 
-function getChat(roomId) {
-    return prisma.message.findMany({
-        where: {
-            roomId: roomId
-        }
-    })
-}
+    sendMessage(content, senderId, roomId) {
+        return prisma.message.create({
+            data: {
+                content, senderId, roomId
+            }
+        })
+    }
 
-function deleteMessagesofUser(senderId) {
-    return prisma.message.deleteMany({
-        where: {
-            senderId: senderId
-        }
-    })
-}
+    getChat(roomId) {
+        return prisma.message.findMany({
+            where: {
+                roomId: roomId
+            }
+        })
+    }
 
-function deleteMessage(message_id) {
-    return prisma.message.delete({
-        where: { message_id }
-    })
-}
+    deleteMessagesofUser(senderId) {
+        return prisma.message.deleteMany({
+            where: {
+                senderId: senderId
+            }
+        })
+    }
 
-function deleteRoomMessages(roomId) {
-    return prisma.message.deleteMany({
-        where: {
-            roomId
-        }
-    })
-}
+    deleteMessage(message_id) {
+        return prisma.message.delete({
+            where: { message_id }
+        })
+    }
 
-module.exports = {
-    sendMessage, getChat, deleteMessagesofUser, deleteMessage, deleteRoomMessages
+    deleteRoomMessages(roomId) {
+        return prisma.message.deleteMany({
+            where: {
+                roomId
+            }
+        })
+    }
+
 }
+    const instance = new MessageAccessor()
+
+    module.exports = instance

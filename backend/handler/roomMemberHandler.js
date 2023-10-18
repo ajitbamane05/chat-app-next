@@ -1,4 +1,4 @@
-const RoomMemberService = require('../service/roomMemberService')
+const { RoomMemberService } = require('../service')
 
 async function getMemberships(req, res) {
     const { userId } = req.body
@@ -61,5 +61,5 @@ async function removeRoomMember(req, res) {
     }
 }
 module.exports = {
-    getMemberships, deleteMemberships, addRoomMember,removeRoomMember
+    getMemberships, deleteMemberships, addRoomMember, removeRoomMember
 }

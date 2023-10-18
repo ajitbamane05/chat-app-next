@@ -1,4 +1,4 @@
-const AuthService = require('../service/authService')
+const { AuthService } = require('../service')
 
 async function login(req, res) {
     const { username, password } = req.body
@@ -6,7 +6,7 @@ async function login(req, res) {
         const login = await AuthService.login(username, password)
         if (login.statusCode === 200) {
             res.header('Authorization', `Bearer ${login.token}`)
-            res.status(200).json({message:"Logged in successfully",token:login.token})
+            res.status(200).json({ message: "Logged in successfully", token: login.token })
         }
         else {
             res.status(login.statusCode).json(login.message)
