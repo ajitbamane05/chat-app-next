@@ -1,7 +1,11 @@
 require('dotenv').config({path:'./.env'})
 const express = require('express')
 const cors = require('cors');
+const helmet = require('helmet');
+
 const app = express()
+app.use(helmet());
+
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes.js');
 const chatRoutes = require('./routes/chatRoutes.js');
