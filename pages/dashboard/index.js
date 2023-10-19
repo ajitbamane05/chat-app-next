@@ -5,7 +5,6 @@ import ChatUserList from '@/Component/ChatUserList';
 const Jwt = require('jsonwebtoken')
 import axios from 'axios'
 import PrimarySearchAppBar from "@/Component/PrimarySearchAppBar";
-
 import Stack from '@mui/material/Stack';
 const Dadhboard = ({ data, username, users }) => {
   const rooms = data.map((room) => room)
@@ -68,7 +67,7 @@ export async function getServerSideProps(context) {
 
     }
     catch (error) {
-      context.res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly');
+      // context.res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly');
       return {
         redirect: {
           destination: "/",
@@ -78,7 +77,7 @@ export async function getServerSideProps(context) {
     }
   }
   else {
-    context.res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly');
+    // context.res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly');
     return {
       redirect: {
         destination: "/",
