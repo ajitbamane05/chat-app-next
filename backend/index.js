@@ -22,10 +22,10 @@ app.get('/', (req, res) => {
     res.status(200).json({message:"Hello from backend"})
 })
 
-app.use('/api/api', authRoutes);
-app.use('/api/api/user', userRoutes);
-app.use('/api/api/chat', chatRoutes);
-app.use('/api/api/room', roomRoutes);
+app.use('/api', authRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/chat', chatRoutes);
+app.use('/api/room', roomRoutes);
 
 app.listen(3000, () => {
     console.log('Listning on port 3000');

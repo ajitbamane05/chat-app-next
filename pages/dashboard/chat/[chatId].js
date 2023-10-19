@@ -30,7 +30,7 @@ const Chat = ({ senderId, chatId, chats, data, users, username, headers }) => {
     const sendChat = async (e) => {
         e.preventDefault()
         const now = new Date();
-        await axios.post(`/api/chat/sendmessage`, { content: message, senderId: senderId, roomId: chatId }, { headers: headers })
+        await axios.post(`/api/api/chat/sendmessage`, { content: message, senderId: senderId, roomId: chatId }, { headers: headers })
             .then(response => {
                 console.log(response.data);
             })
@@ -90,13 +90,13 @@ export async function getServerSideProps(context) {
             const chatId = context.params.chatId
             console.log(chatId);
             const senderId = userId
-            const [res, chatResponse, usersData] = await Promise.all([axios.post('/api/room/getmembership', {
+            const [res, chatResponse, usersData] = await Promise.all([axios.post('/api/api/room/getmembership', {
                 userId: userId
             }, { headers: headers }),
-            axios.post('/api/chat/getchat', {
+            axios.post('/api/api/chat/getchat', {
                 roomId: chatId
             }, { headers: headers }),
-            axios.get('/api/user/getallusers', { headers: headers })
+            axios.get('/api/api/user/getallusers', { headers: headers })
             ])
             const data = res.data
             const chats = chatResponse.data
