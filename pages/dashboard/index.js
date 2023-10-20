@@ -40,49 +40,36 @@ const Dashboard = ({ data, username, users }) => {
 export default Dashboard;
 
 export async function getServerSideProps(context) {
-  const token = await context.req.cookies.token || null;
-  if (token) {
-    const actualToken = token.split(' ')[1]
-    const data1 = Jwt.verify(actualToken, process.env.SECRET)
-    const userId = data1.user_id
-    try {
-      const headers = {
-        'authorization': token
-      };
-      const username = data1.username
-      const res = await axios.post('/api/room/getmembership', {
-        userId: userId
-      }, { headers: headers })
-      const data = res.data
-      console.log(data);
-      const usersData = await axios.get('/api/user/getallusers', { headers: headers })
-      const users = usersData.data
-      return {
-        props: {
-          data,
-          username,
-          users
-        }
-      }
-
-    }
-    catch (error) {
-      context.res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly');
-      return {
-        redirect: {
-          destination: "/",
-          permanent: false,
-        },
-      }
-    }
-  }
-  else {
-    context.res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly');
+  const token = context.req.cookies.token || null; 
+  if (!token) {
     return {
       redirect: {
         destination: "/",
         permanent: false,
       },
+    }
+  }
+  try {
+    const actualToken = token.split(' ')[1];
+    const data1 = Jwt.verify(actualToken, process.env.SECRET);
+    const { user_id: userId, username } = data1;
+    const headers = {
+      'authorization': token
     };
+    const { data } = await axios.post('/api/room/getmembership', { userId }, { headers });
+    // Fetching all users
+    const usersData = await axios.get('/api/user/getallusers', { headers });
+    const users = usersData.data;
+    return {
+      props: {
+        data,
+        username,
+        users
+      }
+    }
+  } catch (error) {
+    context.res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly');
+    console.error('Error fetching data:', error.message);
+    // You can handle the error appropriately here, maybe return a redirect or an error prop.
   }
 }

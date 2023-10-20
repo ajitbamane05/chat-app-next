@@ -139,29 +139,30 @@ export default function Home() {
 
 
 export async function getServerSideProps(context) {
-  const token = context.req.cookies.token || null;
-  if (token) {
-    try {
-      const actualToken = token?.split(' ')[1]
-      console.log(actualToken);
-      const data1 = Jwt.verify(actualToken, process.env.SECRET)
-      if (data1) {
-        return {
-          redirect: {
-            destination: "/dashboard",
-            permanent: false,
-          },
-        };
-      }
-    }
-    catch (error) {
-      context.res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly');
+  const token = context.req.cookies.token || null; 
+  if (!token) {
+    return { props: {} };
+  }
+  try {
+    const actualToken = token.split(' ')[1];
+    const data1 = Jwt.verify(actualToken, process.env.SECRET);  
+    if (data1) {
       return {
-        props: {},
+        redirect: {
+          destination: "/dashboard",
+          permanent: false,
+        },
       };
     }
+  } catch (error) {
+    context.res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly');
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
   }
-  return {
-    props: {},
-  };
+  return { props: {} };
 }
+
