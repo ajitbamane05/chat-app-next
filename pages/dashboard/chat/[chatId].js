@@ -30,7 +30,7 @@ const Chat = ({ senderId, chatId, chats, data, users, username, headers }) => {
     const sendChat = async (e) => {
         e.preventDefault()
         const now = new Date();
-        await axios.post(`/api/chat/sendmessage`, { content: message, senderId: senderId, roomId: chatId }, { headers: headers })
+        await axios.post(`https://chat-app-pro.site/api/chat/sendmessage`, { content: message, senderId: senderId, roomId: chatId }, { headers: headers })
             .then(response => {
                 console.log(response.data);
             })
@@ -83,20 +83,19 @@ export async function getServerSideProps(context) {
             };
             const actualToken = token.split(' ')[1]
             const data1 = Jwt.verify(actualToken, process.env.SECRET)
-
             const userId = data1.user_id
             console.log(userId);
             const username = data1.username
             const chatId = context.params.chatId
             console.log(chatId);
             const senderId = userId
-            const [res, chatResponse, usersData] = await Promise.all([axios.post('/api/room/getmembership', {
+            const [res, chatResponse, usersData] = await Promise.all([axios.post('https://chat-app-pro.site/api/room/getmembership', {
                 userId: userId
             }, { headers: headers }),
-            axios.post('/api/chat/getchat', {
+            axios.post('https://chat-app-pro.site/api/chat/getchat', {
                 roomId: chatId
             }, { headers: headers }),
-            axios.get('/api/user/getallusers', { headers: headers })
+            axios.get('https://chat-app-pro.site/api/user/getallusers', { headers: headers })
             ])
             const data = res.data
             const chats = chatResponse.data

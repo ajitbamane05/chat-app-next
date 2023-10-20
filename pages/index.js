@@ -32,7 +32,7 @@ export default function Home() {
     e.preventDefault(username, password);
 
     try {
-      const res = await axios.post('/api/login', {
+      const res = await axios.post('https://chat-app-pro.site/api/login', {
         username: username,
         password: password
       })
