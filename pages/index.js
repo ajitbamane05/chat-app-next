@@ -32,14 +32,12 @@ export default function Home() {
     e.preventDefault(username, password);
 
     try {
-      const res = await axios.post('/api/api/login', {
+      const res = await axios.post('/api/login', {
         username: username,
         password: password
       })
-
       if (res.status === 200) {
         const token = await res.headers['authorization'];
-        localStorage.setItem('token', token);
         Cookies.set('token', token);
         router.push("/dashboard");
       }
