@@ -11,12 +11,16 @@ const userRoutes = require('./routes/userRoutes.js');
 const chatRoutes = require('./routes/chatRoutes.js');
 const roomRoutes = require('./routes/roomRoutes.js');
 app.use(express.json())
-const crosOptions = {
+const corsOptions = {
     origin:['http://localhost:3001','http://chat-app-pro.site','http://www.chat-app-pro.site'],
     optionsSuccessStatus: 200,
     exposedHeaders: ['Authorization']
 }
-app.use(cors(crosOptions));
+app.use(cors(corsOptions));
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Internal Server Error');
+});
 
 app.get('/', (req, res) => {
     res.status(200).json({message:"Hello from backend"})
