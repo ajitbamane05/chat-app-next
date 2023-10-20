@@ -139,7 +139,7 @@ export default function Home() {
 
 
 export async function getServerSideProps(context) {
-  const token = context.req.cookies.token || null; 
+  const token = await context.req.cookies.token || null; 
   if (!token) {
     return { props: {} };
   }
