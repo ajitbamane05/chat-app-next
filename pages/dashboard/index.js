@@ -41,14 +41,6 @@ export default Dashboard;
 
 export async function getServerSideProps(context) {
   const token = await context.req.cookies.token || null; 
-  if (!token) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    }
-  }
   try {
     const actualToken = token.split(' ')[1];
     const data1 = Jwt.verify(actualToken, process.env.SECRET);
