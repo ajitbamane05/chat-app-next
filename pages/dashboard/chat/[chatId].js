@@ -25,7 +25,7 @@ const Chat = ({ senderId, chatId, chats, data, users, username, headers }) => {
             socketInstance.emit('leaveRoom', chatId, senderId);
             socketInstance.disconnect()
         }
-    }, [chatId,senderId])
+    }, [])
 
     const sendChat = async (e) => {
         e.preventDefault()
