@@ -49,9 +49,16 @@ model Message {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   senderId   String
+  read       Boolean  @default(false)
   sender     User     @relation(fields: [senderId], references: [user_id])
   roomId     String
   room       Room     @relation(fields: [roomId], references: [room_id])
+}
+
+model Session {
+  sessionId String @id @default(uuid())
+  userId    String
+  token     String @unique
 }
 
 enum RoomType {

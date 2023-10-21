@@ -1,9 +1,6 @@
 -- CreateEnum
 CREATE TYPE "RoomType" AS ENUM ('DIRECT', 'GROUP');
 
--- CreateEnum
-CREATE TYPE "MessageType" AS ENUM ('TEXT', 'IMAGE', 'VIDEO');
-
 -- CreateTable
 CREATE TABLE "User" (
     "user_id" TEXT NOT NULL,
@@ -12,6 +9,7 @@ CREATE TABLE "User" (
     "password" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "isAdmin" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("user_id")
 );
@@ -22,24 +20,25 @@ CREATE TABLE "Room" (
     "type" "RoomType" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "name" TEXT,
+    "name" TEXT NOT NULL,
 
     CONSTRAINT "Room_pkey" PRIMARY KEY ("room_id")
 );
 
 -- CreateTable
-CREATE TABLE "RoomAdmin" (
-    "roomId" TEXT NOT NULL,
+CREATE TABLE "RoomMember" (
+    "roomMemberId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
+    "roomId" TEXT NOT NULL,
+    "isAdmin" BOOLEAN NOT NULL DEFAULT false,
 
-    CONSTRAINT "RoomAdmin_pkey" PRIMARY KEY ("roomId","userId")
+    CONSTRAINT "RoomMember_pkey" PRIMARY KEY ("roomMemberId")
 );
 
 -- CreateTable
 CREATE TABLE "Message" (
     "message_id" TEXT NOT NULL,
     "content" TEXT NOT NULL,
-    "type" "MessageType" NOT NULL,
     "mediaUrl" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -50,9 +49,12 @@ CREATE TABLE "Message" (
 );
 
 -- CreateTable
-CREATE TABLE "_RoomMembers" (
-    "A" TEXT NOT NULL,
-    "B" TEXT NOT NULL
+CREATE TABLE "Session" (
+    "sessionId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "token" TEXT NOT NULL,
+
+    CONSTRAINT "Session_pkey" PRIMARY KEY ("sessionId")
 );
 
 -- CreateIndex
@@ -62,25 +64,16 @@ CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_RoomMembers_AB_unique" ON "_RoomMembers"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_RoomMembers_B_index" ON "_RoomMembers"("B");
+CREATE UNIQUE INDEX "Room_name_key" ON "Room"("name");
 
 -- AddForeignKey
-ALTER TABLE "RoomAdmin" ADD CONSTRAINT "RoomAdmin_roomId_fkey" FOREIGN KEY ("roomId") REFERENCES "Room"("room_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "RoomMember" ADD CONSTRAINT "RoomMember_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "RoomAdmin" ADD CONSTRAINT "RoomAdmin_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "RoomMember" ADD CONSTRAINT "RoomMember_roomId_fkey" FOREIGN KEY ("roomId") REFERENCES "Room"("room_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Message" ADD CONSTRAINT "Message_senderId_fkey" FOREIGN KEY ("senderId") REFERENCES "User"("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Message" ADD CONSTRAINT "Message_roomId_fkey" FOREIGN KEY ("roomId") REFERENCES "Room"("room_id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_RoomMembers" ADD CONSTRAINT "_RoomMembers_A_fkey" FOREIGN KEY ("A") REFERENCES "Room"("room_id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_RoomMembers" ADD CONSTRAINT "_RoomMembers_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("user_id") ON DELETE CASCADE ON UPDATE CASCADE;
