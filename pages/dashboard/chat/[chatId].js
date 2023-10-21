@@ -15,7 +15,7 @@ const Chat = ({ senderId, chatId, chats, data, users, username, headers }) => {
     const [chat, setChat] = useState([...chats])
     const [socket, setSocket] = useState(null);
     useEffect(() => {
-        const socketInstance = io('http://localhost:3002/');
+        const socketInstance = io('/socket.io/');
         console.log(socketInstance);
         socketInstance.emit('joinRoom', chatId, senderId);
         socketInstance.on('chat', (payload) => {
