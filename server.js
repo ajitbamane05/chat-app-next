@@ -39,7 +39,9 @@ io.on('connection', (socket) => {
   });
 });
 
-
+app.get('/', (req, res) => {
+  res.send('Hello, World!');
+});
 
 server.listen(3002, () => {
   console.log('server running at http://localhost:3002');
