@@ -16,11 +16,13 @@ const Chat = ({ senderId, chatId, chats, data, users, username, headers }) => {
     const [socket, setSocket] = useState(null);
     useEffect(() => {
         const socketInstance = io({path:'https://chat-app-pro.site/socket/'});
+        console.log(socketInstance);
         socketInstance.emit('joinRoom', chatId, senderId);
         socketInstance.on('chat', (payload) => {
             setChat((chat) => [...chat, payload])
         })
         setSocket(socketInstance);
+        console.log("useeffect run");
         return () => {
             socketInstance.emit('leaveRoom', chatId, senderId);
             socketInstance.disconnect()
@@ -32,7 +34,7 @@ const Chat = ({ senderId, chatId, chats, data, users, username, headers }) => {
         const now = new Date();
         await axios.post(`https://chat-app-pro.site/api/chat/sendmessage`, { content: message, senderId: senderId, roomId: chatId }, { headers: headers })
             .then(response => {
-                console.log(response.data);
+               response.data
             })
             .catch(error => {
                 console.error('There was an error:', error.response);

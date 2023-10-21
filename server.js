@@ -8,7 +8,7 @@ app.use(cors());
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:3001", "https://chat-app-pro.site"], // Allow this origin to access
+    origin: "http://localhost:3001", // Allow this origin to access
     methods: ["GET", "POST"]
   }
 });
