@@ -20,10 +20,10 @@ module.exports = {
       },
       interpreter: 'none'
     },
-    // {
-    //   name: 'socketServer',
-    //   script: './server.js',
-    // }
+    {
+      name: 'socketServer',
+      script: './server.js',
+    }
   ],
 
   deploy: {
