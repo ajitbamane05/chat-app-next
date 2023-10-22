@@ -14,8 +14,9 @@ const Chat = ({ senderId, chatId, chats, data, users, username, headers }) => {
     const [message, setMessage] = useState('');
     const [chat, setChat] = useState([...chats])
     const [socket, setSocket] = useState(null);
+    
     useEffect(() => {
-        const socketInstance = io('https://chat-app-pro.site',{path: '/socket.io/'});
+        const socketInstance = io('https://chat-app-pro.site/socket.io/');
         console.log(socketInstance);
         socketInstance.emit('joinRoom', chatId, senderId);
         socketInstance.on('chat', (payload) => {

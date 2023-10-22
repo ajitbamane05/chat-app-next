@@ -20,7 +20,8 @@
     "helmet": "^7.0.0",
     "jsonwebtoken": "^9.0.2",
     "prisma": "^5.4.2",
-    "rambda": "^8.5.0"
+    "rambda": "^8.5.0",
+    "socket.io": "^4.7.2"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
