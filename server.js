@@ -17,7 +17,7 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
    socket.on('joinRoom', (roomId,senderId) => {
     socket.join(roomId);
-    // console.log(`User ${senderId} joined room ${roomId}`);
+    console.log(`User ${senderId} joined room ${roomId}`);
   });
 
   // Leave a specific room
