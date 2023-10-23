@@ -51,11 +51,13 @@ export async function getServerSideProps(context) {
       'authorization': token
     };
     const username = data1.username
-    const res = await axios.post('https://chat-app-pro.site/api/room/getmembership', {
+    const [res, usersData] = await Promise.all([axios.post('https://chat-app-pro.site/api/room/getmembership', {
       userId: userId
-    }, { headers: headers })
+    }, { headers: headers }),
+    axios.get('https://chat-app-pro.site/api/user/getallusers', { headers: headers })
+    ])
+
     const data = res.data
-    const usersData = await axios.get('https://chat-app-pro.site/api/user/getallusers', { headers: headers })
     const users = usersData.data
     return {
       props: {
