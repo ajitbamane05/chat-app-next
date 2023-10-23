@@ -17,9 +17,10 @@ io.on('connection', (socket) => {
   });
 
   // Leave a specific room
-  socket.on('leaveRoom', (roomId,senderId) => {
+  socket.on('leaveRoom', (roomId,senderId, callback) => {
     socket.leave(roomId);
     // console.log(`User ${senderId} left room ${roomId}`);
+    callback()
   });
 
 
