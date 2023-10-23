@@ -39,7 +39,9 @@ io.on('connection', (socket) => {
   });
 });
 
-
+app.get('/', (req,res)=>{
+    res.status(200).json({message:"Hello from socket"})
+})
 server.listen(3002, () => {
   console.log('server running at http://localhost:3002');
 });
