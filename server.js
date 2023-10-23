@@ -6,7 +6,7 @@ const server = createServer(app);
 const io = new Server(server, {
   cors: {
     origin: ["https://chat-app-pro.site" , "https://www.chat-app-pro.site"],
-    credentials: true
+    // credentials: true
   }
 });
 
