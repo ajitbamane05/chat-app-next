@@ -31,7 +31,6 @@ function ChatUserList({ rooms, users }) {
         room.room?.members[0].user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
         room.room?.members[1].user.username.toLowerCase().includes(searchQuery.toLowerCase())
     );
-    console.log(filteredRooms);
     const handleSearchChange = (event) => {
         setSearchQuery(event?.target?.value);
     };

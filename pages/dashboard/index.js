@@ -7,7 +7,6 @@ import axios from 'axios'
 import PrimarySearchAppBar from "@/Component/PrimarySearchAppBar";
 import Stack from '@mui/material/Stack';
 const Dashboard = ({ data, username, users }) => {
-  // const rooms = data.map((room) => room)
   return (
     <div>
       <Box sx={{ display: 'flex' }}>
@@ -17,22 +16,17 @@ const Dashboard = ({ data, username, users }) => {
           sx={{ flexGrow: 1, bgcolor: 'background.default' }}
         >
           <Toolbar />
-
           <div style={{ width: '100vw' }}>
             <Stack direction='row' spacing={2}>
               <Stack>
                 <ChatUserList rooms={data} users={users} />
               </Stack>
               <Stack>
-
               </Stack>
             </Stack>
-
           </div>
-
         </Box>
       </Box>
-
     </div>
   );
 }
@@ -61,7 +55,6 @@ export async function getServerSideProps(context) {
       userId: userId
     }, { headers: headers })
     const data = res.data
-    console.log(data);
     const usersData = await axios.get('https://chat-app-pro.site/api/user/getallusers', { headers: headers })
     const users = usersData.data
     return {

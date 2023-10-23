@@ -85,10 +85,10 @@ export async function getServerSideProps(context) {
             const actualToken = token.split(' ')[1]
             const data1 = Jwt.verify(actualToken, process.env.SECRET)
             const userId = data1.user_id
-            console.log(userId);
+            
             const username = data1.username
             const chatId = context.params.chatId
-            console.log(chatId);
+            
             const senderId = userId
             const [res, chatResponse, usersData] = await Promise.all([axios.post('https://chat-app-pro.site/api/room/getmembership', {
                 userId: userId
