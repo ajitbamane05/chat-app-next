@@ -14,7 +14,6 @@ const Chat = ({ senderId, chatId, chats, data, users, username, headers }) => {
     const [message, setMessage] = useState('');
     const [chat, setChat] = useState([...chats])
     const [socket, setSocket] = useState(null);
-    
     useEffect(() => {
         const socketInstance = io('https://chat-app-pro.site/socket.io/');
         console.log(socketInstance);
@@ -40,7 +39,7 @@ const Chat = ({ senderId, chatId, chats, data, users, username, headers }) => {
                 console.error('There was an error:', error.response);
             });
         socket.emit('chat', {
-            content: message, senderId: senderId, createdAt: now, roomId: chatId
+            content: message, senderId: senderId, createdAt: now, roomId: chatId, message_id:now
         })
         setMessage('')
     }
