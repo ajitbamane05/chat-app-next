@@ -14,22 +14,22 @@ const Chat = ({ senderId, chatId, chats, data, users, username, headers }) => {
     const [message, setMessage] = useState('');
     const [chat, setChat] = useState(chats)
     const [socket, setSocket] = useState(null);
+
     useEffect(() => {
-        const socketInstance = io('https://chat-app-pro.site/socket.io/',
-        {withCredentials: true}
-        );
-        console.log(socketInstance);
+        const socketInstance = io('https://chat-app-pro.site/socket.io/',{withCredentials: true});
         socketInstance.emit('joinRoom', chatId, senderId);
         socketInstance.on('chat', (payload) => {
             setChat((chat) => [...chat, payload])
+            console.log(socketInstance);
         })
         setSocket(socketInstance);
         return () => {
             socketInstance.emit('leaveRoom', chatId, senderId, ()=>{
-                socketInstance.disconnect()
-            });      
+                console.log("Server disconnected");
+            }); 
+            socketInstance.disconnect()          
         }
-    }, [chatId,senderId])
+    }, [])
 
     const sendChat = async (e) => {
         e.preventDefault()

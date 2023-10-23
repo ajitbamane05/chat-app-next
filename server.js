@@ -5,7 +5,7 @@ const app = express()
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["https://chat-app-pro.site" , "https://www.chat-app-pro.site"],
+    origin: ["http://localhost:3001", "https://chat-app-pro.site" , "https://www.chat-app-pro.site"],
     credentials: true
   }
 });
@@ -13,14 +13,16 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
    socket.on('joinRoom', (roomId,senderId) => {
     socket.join(roomId);
+    console.log("joined room");
     // console.log(`User ${senderId} joined room ${roomId}`);
   });
 
   // Leave a specific room
-  socket.on('leaveRoom', (roomId,senderId, callback) => {
+  socket.on('leaveRoom', (roomId,senderId,callback) => {
     socket.leave(roomId);
-    // console.log(`User ${senderId} left room ${roomId}`);
     callback()
+    console.log("Left room");
+    // console.log(`User ${senderId} left room ${roomId}`);
   });
 
 
