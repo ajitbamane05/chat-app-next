@@ -10,9 +10,9 @@ import PrimarySearchAppBar from '@/Component/PrimarySearchAppBar';
 import ChatUser from '@/Component/ChatUser';
 
 const Chat = ({ senderId, chatId, chats, data, users, username, headers }) => {
-    const rooms = data.map((room) => room)
+  
     const [message, setMessage] = useState('');
-    const [chat, setChat] = useState([...chats])
+    const [chat, setChat] = useState(chats)
     const [socket, setSocket] = useState(null);
     useEffect(() => {
         const socketInstance = io('https://chat-app-pro.site/socket.io/',{withCredentials: true});
@@ -24,7 +24,7 @@ const Chat = ({ senderId, chatId, chats, data, users, username, headers }) => {
         setSocket(socketInstance);
         return () => {
             socketInstance.emit('leaveRoom', chatId, senderId);
-            // socketInstance.disconnect()
+            socketInstance.disconnect()
         }
     }, [])
 
@@ -59,7 +59,7 @@ const Chat = ({ senderId, chatId, chats, data, users, username, headers }) => {
                     <div style={{ width: '100vw' }}>
                         <Stack direction='row' spacing={2}>
                             <Stack sx={{ display: 'fixed', top: 50, height: '80vh', overflowY: 'hidden', overflowX: 'hidden' }} >
-                                <ChatUser rooms={rooms} />
+                                <ChatUser rooms={data} />
                             </Stack>
                             <Stack sx={{ maxHeight: '600px', overflowY: 'scroll;', overflowX: 'hidden' }}>
                                 <ChatMessages chat={chat} sendChat={sendChat} handleMessage={handleMessage} message={message} senderId={senderId} users={users} />
