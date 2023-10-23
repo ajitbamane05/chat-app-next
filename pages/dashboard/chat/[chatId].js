@@ -21,13 +21,11 @@ const Chat = ({ senderId, chatId, chats, data, users, username, headers }) => {
         socketInstance.emit('joinRoom', chatId, senderId);
         socketInstance.on('chat', (payload) => {
             setChat((chat) => [...chat, payload])
-            console.log(socketInstance);
+            // console.log(socketInstance);
         })
         setSocket(socketInstance);
         return () => {
-            socketInstance.emit('leaveRoom', chatId, senderId, ()=>{
-                console.log("Server disconnected");
-            }); 
+            socketInstance.emit('leaveRoom', chatId, senderId); 
             socketInstance.disconnect()          
         }
     }, [])

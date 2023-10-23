@@ -13,21 +13,20 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
    socket.on('joinRoom', (roomId,senderId) => {
     socket.join(roomId);
-    console.log("joined room");
+    console.log("joined room",senderId);
     // console.log(`User ${senderId} joined room ${roomId}`);
   });
 
   // Leave a specific room
-  socket.on('leaveRoom', (roomId,senderId,callback) => {
+  socket.on('leaveRoom', (roomId,senderId,) => {
     socket.leave(roomId);
-    callback()
-    console.log("Left room");
+    console.log("Left room",senderId);
     // console.log(`User ${senderId} left room ${roomId}`);
   });
 
 
   socket.on('chat', (payload) => {
-    console.log('Received a chat message', payload);
+    // console.log('Received a chat message', payload);
     // Ensure payload has the roomId
     if(!payload.roomId) {
       console.error('No roomId specified in payload');
