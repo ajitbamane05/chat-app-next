@@ -12,7 +12,7 @@ const chatRoutes = require('./routes/chatRoutes.js');
 const roomRoutes = require('./routes/roomRoutes.js');
 app.use(express.json())
 const corsOptions = {
-    origin:['http://localhost:3001','http://chat-app-pro.site','http://www.chat-app-pro.site'],
+    origin:['http://localhost:3001','https://chat-app-pro.site','https://www.chat-app-pro.site'],
     optionsSuccessStatus: 200,
     exposedHeaders: ['Authorization']
 }
