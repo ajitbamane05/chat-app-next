@@ -1,16 +1,11 @@
 const express = require("express")
 const { createServer } = require("node:http");
 const { Server } = require("socket.io");
-const cors = require("cors")
-
 const app = express()
-app.use(cors())
-
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["https://chat-app-pro.site" , "https://www.chat-app-pro.site"], // Allow this origin to access
-    methods: ["GET", "POST"]
+    origin: ["https://chat-app-pro.site" , "https://www.chat-app-pro.site"]
   }
 });
 
