@@ -16,7 +16,7 @@ const Chat = ({ senderId, chatId, chats, data, users, username, headers }) => {
     const [socket, setSocket] = useState(null);
     useEffect(() => {
         const socketInstance = io('https://chat-app-pro.site/socket.io/',
-        // {withCredentials: true}
+        {withCredentials: true}
         );
         console.log(socketInstance);
         socketInstance.emit('joinRoom', chatId, senderId);
@@ -28,7 +28,7 @@ const Chat = ({ senderId, chatId, chats, data, users, username, headers }) => {
             socketInstance.emit('leaveRoom', chatId, senderId);
             socketInstance.disconnect()
         }
-    }, [])
+    }, [chatId,senderId])
 
     const sendChat = async (e) => {
         e.preventDefault()
