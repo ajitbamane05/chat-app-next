@@ -17,7 +17,7 @@ const Chat = ({ senderId, chatId, chats, data, users, username, headers }) => {
 
     useEffect(() => {
         
-        const socketInstance = io('http://localhost:3002',{withCredentials: true});
+        const socketInstance = io('https://chat-app-pro.site/',{withCredentials: true});
         socketInstance.emit('joinRoom', chatId, senderId);
         socketInstance.on('chat', (payload) => {
             setChat((chat) => [...chat, payload])
