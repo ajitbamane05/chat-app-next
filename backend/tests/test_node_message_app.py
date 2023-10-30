@@ -3,6 +3,7 @@ import json
 import datetime
 import time
 import logging
+import os
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -29,10 +30,13 @@ def test_user_login():
     "username":"Peter",
     "password":"password"
     }
-    with open('user-token.json') as infile:
-        token = json.load(infile)
-    expiry=datetime.datetime.strptime(token['expires at'], '%Y-%m-%d %H:%M:%S')
-    if expiry > datetime.datetime.now():
+    try: 
+        with open('user-token.json') as infile:
+            token = json.load(infile)
+            expiry=datetime.datetime.strptime(token['expires at'], '%Y-%m-%d %H:%M:%S')
+    except(FileNotFoundError, json.JSONDecodeError, KeyError):
+        expiry = None   
+    if expiry and expiry > datetime.datetime.now():
         assert True
     else:
         response = requests.post(F"{ENDPOINT}/api/login", json=payload)
@@ -55,10 +59,13 @@ def test_login_admin():
     "username":"Admin",
     "password":"password"
     }
-    with open('admin-token.json') as infile:
-        token = json.load(infile)
-    expiry=datetime.datetime.strptime(token['expires at'], '%Y-%m-%d %H:%M:%S')
-    if expiry > datetime.datetime.now():
+    try: 
+        with open('admin-token.json') as infile:
+            token = json.load(infile)
+            expiry=datetime.datetime.strptime(token['expires at'], '%Y-%m-%d %H:%M:%S')
+    except(FileNotFoundError, json.JSONDecodeError, KeyError):
+        expiry = None 
+    if expiry and expiry > datetime.datetime.now():
         assert True
     else:
         response = requests.post(F"{ENDPOINT}/api/login", json=payload)
@@ -118,7 +125,7 @@ def test_delete_admin_by_user():
     "username": "testAdmin",
     "user_id": "userId"  
     }
-    headers=load_token('admin-token.json')
+    headers=load_token('user-token.json')
     make_request('/api/user/deleteuser',headers,payload,401)
 
 
@@ -135,14 +142,8 @@ def test_delete_user_by_admin():
     "username": "testuser",
     "user_id": "testuserId"  
     }
-    with open('admin-token.json') as infile:
-        token = json.load(infile)
-    headers = {}
-    headers['authorization'] = token['token']
-    response = requests.post(F"{ENDPOINT}/api/user/deleteuser",headers=headers, json=payload)
-
-    print(response.json())
-    assert response.status_code == 200
+    headers=load_token('admin-token.json')
+    make_request('/api/user/deleteuser',headers,payload,200)
 
 def test_send_message_by_different_sender_id():
     payload = {
@@ -150,15 +151,8 @@ def test_send_message_by_different_sender_id():
     "senderId": "297fe06c-af86-44d4-8414-2bd4881e934a",
     "roomId": "8f582f3d-d046-41f8-b6fb-795163167863" 
     }   
-    with open('user-token.json') as infile:
-        token = json.load(infile)
-    headers = {}
-    headers['authorization'] = token['token']
-
-    response = requests.post(F"{ENDPOINT}/api/chat/sendmessage",headers=headers, json=payload)
-
-    print(response.json())
-    assert response.status_code == 401
+    headers=load_token('user-token.json')
+    make_request('/api/chat/sendmessage',headers,payload,401)
 
 def test_send_message_by_loggedin_user():
     payload = {
@@ -166,30 +160,17 @@ def test_send_message_by_loggedin_user():
     "senderId": "087b4134-ce61-43f2-9087-90db12631879",
     "roomId": "8f582f3d-d046-41f8-b6fb-795163167863"
     }   
-    with open('user-token.json') as infile:
-        token = json.load(infile)
-    headers = {}
-    headers['authorization'] = token['token']
-
-    response = requests.post(F"{ENDPOINT}/api/chat/sendmessage",headers=headers, json=payload)
-
-    print(response.json())
-    assert response.status_code == 200
+    headers=load_token('user-token.json')
+    make_request('/api/chat/sendmessage',headers,payload,200)
 
 
 def test_get_chat_of_room():
     payload={
     "roomId":"8f582f3d-d046-41f8-b6fb-795163167863"
     }
-    with open('user-token.json') as infile:
-        token = json.load(infile)
-    headers = {}
-    headers['authorization'] = token['token']
+    headers=load_token('user-token.json')
+    make_request('/api/chat/getchat',headers,payload,200)
 
-    response = requests.post(F"{ENDPOINT}/api/chat/getchat",headers=headers, json=payload)
-
-    print(response.json())
-    assert response.status_code == 200
 
 def test_admin_logout():
     with open('admin-token.json') as infile:
@@ -203,14 +184,7 @@ def test_admin_logout():
     response = requests.post(F"{ENDPOINT}/api/logout",headers=headers, json=payload)
 
     print(response.json())
-    expires_at = datetime.datetime.now()-datetime.timedelta(seconds=60*60*24)
-    token_data={
-        "expires at":expires_at.strftime('%Y-%m-%d %H:%M:%S'),
-        "token":token['token']
-    }
-    with open('admin-token.json', 'w') as file:
-        json.dump(token_data,file,indent=4)
-        file.close()
+    os.remove('admin-token.json')
     assert response.status_code == 200
 
 
@@ -226,20 +200,6 @@ def test_user_logout():
     }
     response = requests.post(F"{ENDPOINT}/api/logout",headers=headers, json=payload)
     print(response.json())
-    expires_at = datetime.datetime.now()-datetime.timedelta(seconds=60*60*24)
-    token_data={
-        'expires at':expires_at.strftime('%Y-%m-%d %H:%M:%S'),
-        'token': token['token']
-    }
-    with open('user-token.json', 'w') as file:
-        json.dump(token_data,file,indent=4)
-        file.close()
+    os.remove('user-token.json')
     assert response.status_code == 200
-
-
-
-
-
-
-
 
