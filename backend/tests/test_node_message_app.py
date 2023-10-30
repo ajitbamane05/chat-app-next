@@ -6,7 +6,7 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
-ENDPOINT="http://localhost:3000"
+ENDPOINT="https://chat-app-pro.site"
 
 def test_can_call_endpoint():
     response = requests.get(ENDPOINT)
@@ -26,7 +26,7 @@ def make_request(endpoint,headers,payload,expected_status):
 
 def test_user_login():
     payload={
-    "username":"Steve",
+    "username":"Peter",
     "password":"password"
     }
     with open('user-token.json') as infile:
@@ -84,23 +84,14 @@ def test_create_user_by_user():
     "password": "password"
     }
     headers=load_token('user-token.json')
-    # with open('user-token.json') as infile:
-    #     token = json.load(infile)
-    # headers = {}
-    # headers['authorization'] = token['token']
     make_request('/api/user/createuser',headers,payload,401)
    
 
 def test_get_room_memberships_of_user():
     payload = {
-        "userId":"86621119-8fc7-4695-b270-3d999d670821"
+        "userId":"087b4134-ce61-43f2-9087-90db12631879"
     }
     headers=load_token('user-token.json')
-    # with open('user-token.json') as infile:
-    #     token = json.load(infile)
-    # headers = {}
-    # headers['authorization'] = token['token']
-    # print(token['token'])
     make_request('/api/room/getmembership',headers,payload,200)
 
 def test_create_user_by_admin():
@@ -110,10 +101,6 @@ def test_create_user_by_admin():
     "password": "password"
     }
     headers=load_token('admin-token.json')
-    # with open('admin-token.json') as infile:
-    #     token = json.load(infile)
-    # headers = {}
-    # headers['authorization'] = token['token']
     make_request('/api/user/createuser',headers,payload,200)
 
 def test_create_admin_by_admin():
@@ -123,101 +110,86 @@ def test_create_admin_by_admin():
     "password": "password"
     }
     headers=load_token('admin-token.json')
-    # with open('admin-token.json') as infile:
-    #     token = json.load(infile)
-    # headers = {}
-    # headers['authorization'] = token['token']
     make_request('/api/user/createuser',headers,payload,200)
     
 
-# def test_delete_admin_by_user():
-#     payload = {
-#     "username": "testAdmin",
-#     "user_id": "userId"  
-#     }
-#     with open('user-token.json') as infile:
-#         token = json.load(infile)
-#     headers = {}
-#     headers['authorization'] = token['token']
-#     response = requests.post(F"{ENDPOINT}/api/user/deleteuser",headers=headers, json=payload)
-
-#     print(response.json())
-#     assert response.status_code == 401
-
-# def test_delete_admin_by_admin():
-#     payload = {
-#     "username": "testAdmin",
-#     "user_id": "testuserId"  
-#     }
-#     with open('admin-token.json') as infile:
-#         token = json.load(infile)
-#     headers = {}
-#     headers['authorization'] = token['token']
-#     response = requests.post(F"{ENDPOINT}/api/user/deleteuser",headers=headers, json=payload)
-
-#     print(response.json())
-#     assert response.status_code == 200
-
-# def test_delete_user_by_admin():
-#     payload = {
-#     "username": "testuser",
-#     "user_id": "testuserId"  
-#     }
-#     with open('admin-token.json') as infile:
-#         token = json.load(infile)
-#     headers = {}
-#     headers['authorization'] = token['token']
-#     response = requests.post(F"{ENDPOINT}/api/user/deleteuser",headers=headers, json=payload)
-
-#     print(response.json())
-#     assert response.status_code == 200
-
-# def test_send_message_by_different_sender_id():
-#     payload = {
-#     "content": "Long Time no see",
-#     "senderId": "2fcaa677-a53b-4206-8cc9-43dfa210aed0",
-#     "roomId": "552f12b7-c534-43df-a053-c15f178a9743" 
-#     }   
-#     with open('user-token.json') as infile:
-#         token = json.load(infile)
-#     headers = {}
-#     headers['authorization'] = token['token']
-
-#     response = requests.post(F"{ENDPOINT}/api/chat/sendmessage",headers=headers, json=payload)
-
-#     print(response.json())
-#     assert response.status_code == 401
-
-# def test_send_message_by_loggedin_user():
-#     payload = {
-#     "content": "Long Time no see",
-#     "senderId": "2aabb9b8-a695-4b1b-a6c0-b2215b379634",
-#     "roomId": "552f12b7-c534-43df-a053-c15f178a9743"
-#     }   
-#     with open('user-token.json') as infile:
-#         token = json.load(infile)
-#     headers = {}
-#     headers['authorization'] = token['token']
-
-#     response = requests.post(F"{ENDPOINT}/api/chat/sendmessage",headers=headers, json=payload)
-
-#     print(response.json())
-#     assert response.status_code == 200
+def test_delete_admin_by_user():
+    payload = {
+    "username": "testAdmin",
+    "user_id": "userId"  
+    }
+    headers=load_token('admin-token.json')
+    make_request('/api/user/deleteuser',headers,payload,401)
 
 
-# def test_get_chat_of_room():
-#     payload={
-#     "roomId":"552f12b7-c534-43df-a053-c15f178a9743"
-#     }
-#     with open('user-token.json') as infile:
-#         token = json.load(infile)
-#     headers = {}
-#     headers['authorization'] = token['token']
+def test_delete_admin_by_admin():
+    payload = {
+    "username": "testAdmin",
+    "user_id": "testuserId"  
+    }
+    headers=load_token('admin-token.json')
+    make_request('/api/user/deleteuser',headers,payload,200)
 
-#     response = requests.post(F"{ENDPOINT}/api/chat/getchat",headers=headers, json=payload)
+def test_delete_user_by_admin():
+    payload = {
+    "username": "testuser",
+    "user_id": "testuserId"  
+    }
+    with open('admin-token.json') as infile:
+        token = json.load(infile)
+    headers = {}
+    headers['authorization'] = token['token']
+    response = requests.post(F"{ENDPOINT}/api/user/deleteuser",headers=headers, json=payload)
 
-#     print(response.json())
-#     assert response.status_code == 200
+    print(response.json())
+    assert response.status_code == 200
+
+def test_send_message_by_different_sender_id():
+    payload = {
+    "content": "Long Time no see",
+    "senderId": "297fe06c-af86-44d4-8414-2bd4881e934a",
+    "roomId": "8f582f3d-d046-41f8-b6fb-795163167863" 
+    }   
+    with open('user-token.json') as infile:
+        token = json.load(infile)
+    headers = {}
+    headers['authorization'] = token['token']
+
+    response = requests.post(F"{ENDPOINT}/api/chat/sendmessage",headers=headers, json=payload)
+
+    print(response.json())
+    assert response.status_code == 401
+
+def test_send_message_by_loggedin_user():
+    payload = {
+    "content": "Long Time no see",
+    "senderId": "087b4134-ce61-43f2-9087-90db12631879",
+    "roomId": "8f582f3d-d046-41f8-b6fb-795163167863"
+    }   
+    with open('user-token.json') as infile:
+        token = json.load(infile)
+    headers = {}
+    headers['authorization'] = token['token']
+
+    response = requests.post(F"{ENDPOINT}/api/chat/sendmessage",headers=headers, json=payload)
+
+    print(response.json())
+    assert response.status_code == 200
+
+
+def test_get_chat_of_room():
+    payload={
+    "roomId":"8f582f3d-d046-41f8-b6fb-795163167863"
+    }
+    with open('user-token.json') as infile:
+        token = json.load(infile)
+    headers = {}
+    headers['authorization'] = token['token']
+
+    response = requests.post(F"{ENDPOINT}/api/chat/getchat",headers=headers, json=payload)
+
+    print(response.json())
+    assert response.status_code == 200
 
 def test_admin_logout():
     with open('admin-token.json') as infile:
@@ -225,7 +197,7 @@ def test_admin_logout():
     headers = {}
     headers['authorization'] = token['token']
     payload={
-        "userId":"044ae3d8-e75d-4f7c-9b71-ded5114effad",
+        "userId":"9b844e6d-4a10-4c0a-b43b-cb385c5aed00",
         "token":token['token']
     }
     response = requests.post(F"{ENDPOINT}/api/logout",headers=headers, json=payload)
@@ -243,26 +215,26 @@ def test_admin_logout():
 
 
 
-# def test_user_logout():
-#     with open('user-token.json') as infile:
-#         token = json.load(infile)
-#     headers = {}
-#     headers['authorization'] = token['token']
-#     payload={
-#         "userId":"2aabb9b8-a695-4b1b-a6c0-b2215b379634",
-#         "token":token['token']
-#     }
-#     response = requests.post(F"{ENDPOINT}/api/logout",headers=headers, json=payload)
-#     print(response.json())
-#     expires_at = datetime.datetime.now()-datetime.timedelta(seconds=60*60*24)
-#     token_data={
-#         'expires at':expires_at.strftime('%Y-%m-%d %H:%M:%S'),
-#         'token': token['token']
-#     }
-#     with open('user-token.json', 'w') as file:
-#         json.dump(token_data,file,indent=4)
-#         file.close()
-#     assert response.status_code == 200
+def test_user_logout():
+    with open('user-token.json') as infile:
+        token = json.load(infile)
+    headers = {}
+    headers['authorization'] = token['token']
+    payload={
+        "userId":"087b4134-ce61-43f2-9087-90db12631879",
+        "token":token['token']
+    }
+    response = requests.post(F"{ENDPOINT}/api/logout",headers=headers, json=payload)
+    print(response.json())
+    expires_at = datetime.datetime.now()-datetime.timedelta(seconds=60*60*24)
+    token_data={
+        'expires at':expires_at.strftime('%Y-%m-%d %H:%M:%S'),
+        'token': token['token']
+    }
+    with open('user-token.json', 'w') as file:
+        json.dump(token_data,file,indent=4)
+        file.close()
+    assert response.status_code == 200
 
 
 
