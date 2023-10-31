@@ -10,7 +10,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Cookies from 'js-cookie';
 const Jwt = require('jsonwebtoken')
-import bgImage from '../public/images/bgimage4.jpg'
+import bgImage from '../public/images/bgimage2_cp.jpg'
 import axios from 'axios'
 const myLoader = ({ src }) => {
   return `${src}`
@@ -81,7 +81,7 @@ export default function Home() {
         justifyContent="center"
         spacing={2}
         sx={{ mb: 3, pt: 4, pb: 3, position: "absolute", top: "30vh", zIndex: 10 }}>
-        <Paper elevation={3} sx={{ bgcolor: 'rgba(255,255,255,0.5)' }}>
+        <Paper elevation={3} sx={{ bgcolor: 'rgba(255,255,255,0.8)' }}>
           <Box
             component="form"
             sx={{
