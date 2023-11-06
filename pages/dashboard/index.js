@@ -6,11 +6,11 @@ import ChatUserList from '@/Component/ChatUserList';
 import axios from 'axios'
 import PrimarySearchAppBar from "@/Component/PrimarySearchAppBar";
 import Stack from '@mui/material/Stack';
-const Dashboard = ({ data, username, users }) => {
+const Dashboard = ({ data, username, users, token, userId }) => {
   return (
     <div>
       <Box sx={{ display: 'flex' }}>
-        <PrimarySearchAppBar username={username} />
+        <PrimarySearchAppBar username={username} token={token} userId={userId} />
         <Box
           component="main"
           sx={{ flexGrow: 1, bgcolor: 'background.default' }}
@@ -63,7 +63,9 @@ export async function getServerSideProps(context) {
       props: {
         data,
         username,
-        users
+        users,
+        token,
+        userId
       }
     }
   }

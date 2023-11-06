@@ -10,7 +10,7 @@ import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
-
+import axios from 'axios';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -32,7 +32,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function PrimarySearchAppBar({username="USERNAME"}) {
+export default function PrimarySearchAppBar({ username = "USERNAME", userId, token }) {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -56,6 +56,17 @@ export default function PrimarySearchAppBar({username="USERNAME"}) {
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+  const handleLogout = async (e) => {
+    e.preventDefault()
+    const logout = await axios.post('https://chat-app-pro.site/api/logout', {
+      userId:userId,
+      token: token
+    })
+    if (logout.status === 200) {
+      router.push("/")
+      context.res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly')
+    }
+  }
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
@@ -77,10 +88,11 @@ export default function PrimarySearchAppBar({username="USERNAME"}) {
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       <MenuItem
+      onClick={handleLogout}
       //  onClick={()=> signOut({ redirect: false }).then(() => {
       //       router.push("/");
       //   })}
-        >Logout</MenuItem>
+      >Logout</MenuItem>
     </Menu>
   );
 
@@ -157,7 +169,7 @@ export default function PrimarySearchAppBar({username="USERNAME"}) {
           >
             CHATBOX ({username.toUpperCase()})
           </Typography>
-          
+
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton size="large" aria-label="show 4 new mails" color="inherit">
