@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Cookies from 'js-cookie';
 const Jwt = require('jsonwebtoken')
+import Alert from '@mui/material/Alert';
 import bgImage from '../public/images/bgimage2_cp.jpg'
 import axios from 'axios'
 const myLoader = ({ src }) => {
@@ -27,36 +28,44 @@ export default function Home() {
   const router = useRouter();
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
+  const [message, setMessage] = useState("")
+  const [processing, setProcessing] = useState(false)
 
   const submitData = async (e) => {
-    e.preventDefault(username, password);
-
     try {
+      setMessage("")
+      setProcessing(true)
+      e.preventDefault();
       const res = await axios.post('https://chat-app-pro.site/api/login', {
         username: username,
         password: password
       })
+      console.log(res.status);
       if (res.status === 200) {
         const token = await res.headers['authorization'];
         Cookies.set('token', token);
         router.push("/dashboard");
       }
       if (res.status === 401) {
-        alert("wrongCredentials")
+        alert("Wrong cred")
+        setMessage("wrongCredentials")
+        setProcessing(false)
       }
     }
     catch (error) {
-      return new Error(error)
+      setMessage("wrongCredentials")
+      setProcessing(false)
+      return new Error(error.message)
     }
   };
 
   const handleNameChange = (e) => {
     setUsername(e.target.value);
-    // setMessage("");
+    setMessage("");
   };
   const handlePassChange = (e) => {
     setPassword(e.target.value);
-    // setMessage("");
+    setMessage("");
   };
 
   return (
@@ -81,19 +90,18 @@ export default function Home() {
         justifyContent="center"
         spacing={2}
         sx={{ mb: 3, pt: 4, pb: 3, position: "absolute", top: "30vh", zIndex: 10 }}>
+        <Grid item xs={10} sm={5} md={3}>
         <Paper elevation={3} sx={{ bgcolor: 'rgba(255,255,255,0.8)' }}>
           <Box
             component="form"
-            sx={{
-              height: 200,
-              width: 300,
-              pt: 5, pl: 3, pr: 3, pb: 4
-            }}
+            p={2} sx={{ pt: 3, pb: 2 }}
             noValidate
             autoComplete="off"
-          >
+            >
             <Stack spacing={2}>
-
+            {processing ? <><Alert severity="success">Processing...</Alert></> :
+              <> </>}
+            {message == "wrongCredentials" ? <><Alert severity="error">Wrong Credentials!</Alert></> : <></>}
               <Stack item>
                 <TextField
                   id="outlined-basic"
@@ -131,6 +139,7 @@ export default function Home() {
             </Stack>
           </Box >
         </Paper>
+        </Grid> 
       </Grid>
 
     </>
@@ -139,13 +148,13 @@ export default function Home() {
 
 
 export async function getServerSideProps(context) {
-  const token = await context.req.cookies.token || null; 
+  const token = await context.req.cookies.token || null;
   if (!token) {
     return { props: {} };
   }
   try {
     const actualToken = token.split(' ')[1];
-    const data1 = Jwt.verify(actualToken, process.env.SECRET);  
+    const data1 = Jwt.verify(actualToken, process.env.SECRET);
     if (data1) {
       return {
         redirect: {
