@@ -32,7 +32,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function PrimarySearchAppBar({ username = "USERNAME", userId, token }) {
+export default function PrimarySearchAppBar({ username = "USERNAME", userId, actualToken }) {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -60,7 +60,7 @@ export default function PrimarySearchAppBar({ username = "USERNAME", userId, tok
     e.preventDefault()
     const logout = await axios.post('https://chat-app-pro.site/api/logout', {
       userId:userId,
-      token: token
+      token: actualToken
     })
     if (logout.status === 200) {
       router.push("/")

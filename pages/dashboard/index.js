@@ -6,11 +6,11 @@ import ChatUserList from '@/Component/ChatUserList';
 import axios from 'axios'
 import PrimarySearchAppBar from "@/Component/PrimarySearchAppBar";
 import Stack from '@mui/material/Stack';
-const Dashboard = ({ data, username, users, token, userId }) => {
+const Dashboard = ({ data, username, users, actualToken, userId }) => {
   return (
     <div>
       <Box sx={{ display: 'flex' }}>
-        <PrimarySearchAppBar username={username} token={token} userId={userId} />
+        <PrimarySearchAppBar username={username} actualToken={actualToken} userId={userId} />
         <Box
           component="main"
           sx={{ flexGrow: 1, bgcolor: 'background.default' }}
@@ -64,12 +64,13 @@ export async function getServerSideProps(context) {
         data,
         username,
         users,
-        token,
+        actualToken,
         userId
       }
     }
   }
   catch (e) {
+    // context.res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly');
     return {
       redirect: {
         destination: "/",
