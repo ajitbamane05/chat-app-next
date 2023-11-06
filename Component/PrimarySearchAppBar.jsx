@@ -56,15 +56,20 @@ export default function PrimarySearchAppBar({ username = "USERNAME", userId, act
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
-  const handleLogout = async (e) => {
+  const Logout = async (e) => {
     e.preventDefault()
-    const logout = await axios.post('https://chat-app-pro.site/api/logout', {
-      userId:userId,
-      token: actualToken
-    })
-    if (logout.status === 200) {
-      router.push("/")
-      context.res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly')
+    try{
+      const res = await axios.post('https://chat-app-pro.site/api/logout', {
+        userId:userId,
+        token: actualToken
+      })
+      if (res.status === 200) {
+        router.push("/")
+        context.res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly')
+      }
+    }
+    catch(error){
+      return new Error(error.message)
     }
   }
 
@@ -88,7 +93,7 @@ export default function PrimarySearchAppBar({ username = "USERNAME", userId, act
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       <MenuItem
-      onClick={handleLogout}
+      onClick={Logout}
       //  onClick={()=> signOut({ redirect: false }).then(() => {
       //       router.push("/");
       //   })}
