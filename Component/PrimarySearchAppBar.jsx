@@ -57,8 +57,8 @@ export default function PrimarySearchAppBar({ username = "USERNAME", userId, act
     setMobileMoreAnchorEl(event.currentTarget);
   };
   const Logout = async (e) => {
-    e.preventDefault()
     try{
+      e.preventDefault()
       const res = await axios.post('https://chat-app-pro.site/api/logout', {
         userId:userId,
         token: actualToken

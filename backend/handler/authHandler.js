@@ -19,13 +19,13 @@ async function login(req, res) {
 }
 
 async function logout(req, res) {
-    const { userId } = req.body
+    const { userId, token } = req.body
     const tokenString = req.headers['authorization']
 
     const actualToken = tokenString.split(' ')[1]
 
     try {
-        const logout = await AuthService.logout(userId, actualToken)
+        const logout = await AuthService.logout(userId, token)
         return res.status(200).json({ message: "logged out successfully" })
     }
     catch (error) {
