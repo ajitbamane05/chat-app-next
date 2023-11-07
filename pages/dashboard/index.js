@@ -51,10 +51,10 @@ export async function getServerSideProps(context) {
       'authorization': token
     };
     const username = data1.username
-    const [res, usersData] = await Promise.all([axios.post('https://chat-app-pro.site/api/room/getmembership', {
+    const [res, usersData] = await Promise.all([axios.post('/api/room/getmembership', {
       userId: userId
     }, { headers: headers }),
-    axios.get('https://chat-app-pro.site/api/user/getallusers', { headers: headers })
+    axios.get('/api/user/getallusers', { headers: headers })
     ])
 
     const data = res.data
@@ -70,7 +70,7 @@ export async function getServerSideProps(context) {
     }
   }
   catch (e) {
-    // context.res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly');
+    context.res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly');
     return {
       redirect: {
         destination: "/",

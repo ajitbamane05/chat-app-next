@@ -9,7 +9,7 @@ import ChatMessages from '@/Component/ChatMessages';
 import PrimarySearchAppBar from '@/Component/PrimarySearchAppBar';
 import ChatUser from '@/Component/ChatUser';
 
-const Chat = ({ senderId, chatId, chats, data, users, username, headers }) => {
+const Chat = ({ senderId, chatId, chats, data, users, username, headers,actualToken }) => {
   
     const [message, setMessage] = useState('');
     const [chat, setChat] = useState(chats)
@@ -17,7 +17,7 @@ const Chat = ({ senderId, chatId, chats, data, users, username, headers }) => {
 
     useEffect(() => {
         
-        const socketInstance = io('https://chat-app-pro.site/',{withCredentials: true});
+        const socketInstance = io('/',{withCredentials: true});
         socketInstance.emit('joinRoom', chatId, senderId);
         socketInstance.on('chat', (payload) => {
             setChat((chat) => [...chat, payload])
@@ -33,7 +33,7 @@ const Chat = ({ senderId, chatId, chats, data, users, username, headers }) => {
     const sendChat = async (e) => {
         e.preventDefault()
         const now = new Date();
-        await axios.post(`https://chat-app-pro.site/api/chat/sendmessage`, { content: message, senderId: senderId, roomId: chatId }, { headers: headers })
+        await axios.post(`/api/chat/sendmessage`, { content: message, senderId: senderId, roomId: chatId }, { headers: headers })
             .then(response => {
                 response.data
             })
@@ -52,7 +52,7 @@ const Chat = ({ senderId, chatId, chats, data, users, username, headers }) => {
     return (
         <div>
             <Box sx={{ display: 'flex' }}>
-                <PrimarySearchAppBar username={username} />
+                <PrimarySearchAppBar username={username} actualToken={actualToken} userId={senderId} />
                 <Box
                     component="main"
                     sx={{ flexGrow: 1, bgcolor: 'background.default' }}
@@ -92,13 +92,13 @@ export async function getServerSideProps(context) {
             const chatId = context.params.chatId
             
             const senderId = userId
-            const [res, chatResponse, usersData] = await Promise.all([axios.post('https://chat-app-pro.site/api/room/getmembership', {
+            const [res, chatResponse, usersData] = await Promise.all([axios.post('/api/room/getmembership', {
                 userId: userId
             }, { headers: headers }),
-            axios.post('https://chat-app-pro.site/api/chat/getchat', {
+            axios.post('/api/chat/getchat', {
                 roomId: chatId
             }, { headers: headers }),
-            axios.get('https://chat-app-pro.site/api/user/getallusers', { headers: headers })
+            axios.get('/api/user/getallusers', { headers: headers })
             ])
             const data = res.data
             const chats = chatResponse.data
@@ -108,7 +108,8 @@ export async function getServerSideProps(context) {
                     senderId,
                     chatId,
                     chats,
-                    data, users, username, headers
+                    data, users, username, headers,
+                    actualToken
                 }
             }
         }
