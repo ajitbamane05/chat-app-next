@@ -20,13 +20,20 @@ async function login(req, res) {
 
 async function logout(req, res) {
     const { userId, token } = req.body
+    if(!userId)return res.status(400).json({message:"userId not found"})
+    if(!token)return res.status(400).json({message:"Token not found"})
     const tokenString = req.headers['authorization']
 
     const actualToken = tokenString.split(' ')[1]
 
     try {
         const logout = await AuthService.logout(userId, token)
-        return res.status(200).json({ message: "logged out successfully" })
+        if(logout.count>0){
+            return res.status(200).json({ message: "logged out successfully" })
+        }
+        else{
+            return res.status(200).json({ message: "Already logged out" })
+        }
     }
     catch (error) {
         return res.status(400).json({ message: "Error while logging out!", error: error.message })
