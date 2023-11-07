@@ -60,7 +60,7 @@ export default function PrimarySearchAppBar({ username = "USERNAME", userId, act
   const Logout = async (e) => {
     try{
       e.preventDefault()
-      const res = await axios.post('/api/logout', {
+      const res = await axios.post('https://chat-app-pro.site/api/logout', {
         userId:userId,
         token: actualToken
       })

@@ -35,6 +35,10 @@ export default Dashboard;
 
 export async function getServerSideProps(context) {
   const token = await context.req.cookies.token || null;
+  const isHttps = context.req.headers['x-forwarded-proto'] === 'https';
+  const host = context.req.headers.host
+  const protocol = isHttps ? 'https://' : 'http://';
+  const baseUrl = `${protocol}${host}`;
   if (!token) {
     return {
       redirect: {
@@ -51,10 +55,10 @@ export async function getServerSideProps(context) {
       'authorization': token
     };
     const username = data1.username
-    const [res, usersData] = await Promise.all([axios.post('https://chat-app-pro.site/api/room/getmembership', {
+    const [res, usersData] = await Promise.all([axios.post(`${baseUrl}/api/room/getmembership`, {
       userId: userId
     }, { headers: headers }),
-    axios.get('https://chat-app-pro.site/api/user/getallusers', { headers: headers })
+    axios.get(`${baseUrl}/api/user/getallusers`, { headers: headers })
     ])
 
     const data = res.data
