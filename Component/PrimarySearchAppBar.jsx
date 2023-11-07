@@ -15,6 +15,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import Cookies from 'js-cookie';
 // import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 
@@ -64,8 +65,8 @@ export default function PrimarySearchAppBar({ username = "USERNAME", userId, act
         token: actualToken
       })
       if (res.status === 200) {
+        Cookies.remove('token')
         router.push("/")
-        context.res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly')
       }
     }
     catch(error){
