@@ -22,9 +22,9 @@ async function logout(req, res) {
     const { userId, token } = req.body
     if(!userId)return res.status(400).json({message:"userId not found"})
     if(!token)return res.status(400).json({message:"Token not found"})
-    const tokenString = req.headers['authorization']
+    // const tokenString = req.headers['authorization']
 
-    const actualToken = tokenString.split(' ')[1]
+    // const actualToken = tokenString.split(' ')[1]
 
     try {
         const logout = await AuthService.logout(userId, token)
