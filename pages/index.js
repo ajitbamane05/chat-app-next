@@ -36,7 +36,7 @@ export default function Home() {
       setMessage("")
       setProcessing(true)
       e.preventDefault();
-      const res = await axios.post('https://chat-app-pro.site/api/login', {
+      const res = await axios.post('/api/login', {
         username: username,
         password: password
       })
