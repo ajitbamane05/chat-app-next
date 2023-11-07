@@ -9,15 +9,15 @@ import ChatMessages from '@/Component/ChatMessages';
 import PrimarySearchAppBar from '@/Component/PrimarySearchAppBar';
 import ChatUser from '@/Component/ChatUser';
 
-const Chat = ({ senderId, chatId, chats, data, users, username, headers,actualToken }) => {
-  
+const Chat = ({ senderId, chatId, chats, data, users, username, headers, actualToken }) => {
+
     const [message, setMessage] = useState('');
     const [chat, setChat] = useState(chats)
     const [socket, setSocket] = useState(null);
 
     useEffect(() => {
-        
-        const socketInstance = io('/',{withCredentials: true});
+
+        const socketInstance = io('/', { withCredentials: true });
         socketInstance.emit('joinRoom', chatId, senderId);
         socketInstance.on('chat', (payload) => {
             setChat((chat) => [...chat, payload])
@@ -25,8 +25,8 @@ const Chat = ({ senderId, chatId, chats, data, users, username, headers,actualTo
         })
         setSocket(socketInstance);
         return () => {
-            socketInstance.emit('leaveRoom', chatId, senderId); 
-            socketInstance.disconnect()          
+            socketInstance.emit('leaveRoom', chatId, senderId);
+            socketInstance.disconnect()
         }
     }, [])
 
@@ -41,7 +41,7 @@ const Chat = ({ senderId, chatId, chats, data, users, username, headers,actualTo
                 console.error('There was an error:', error.response);
             });
         socket.emit('chat', {
-            content: message, senderId: senderId, createdAt: now, roomId: chatId, message_id:now
+            content: message, senderId: senderId, createdAt: now, roomId: chatId, message_id: now
         })
         setMessage('')
     }
@@ -79,6 +79,10 @@ export default Chat;
 
 export async function getServerSideProps(context) {
     const token = context.req.cookies.token || null;
+    const isHttps = context.req.headers['x-forwarded-proto'] === 'https';
+    const host = context.req.headers.host
+    const protocol = isHttps ? 'https://' : 'http://';
+    const baseUrl = `${protocol}${host}`;
     if (token) {
         try {
             const headers = {
@@ -87,18 +91,18 @@ export async function getServerSideProps(context) {
             const actualToken = token.split(' ')[1]
             const data1 = Jwt.verify(actualToken, process.env.SECRET)
             const userId = data1.user_id
-            
+
             const username = data1.username
             const chatId = context.params.chatId
-            
+
             const senderId = userId
-            const [res, chatResponse, usersData] = await Promise.all([axios.post('/api/room/getmembership', {
+            const [res, chatResponse, usersData] = await Promise.all([axios.post(`${baseUrl}/api/room/getmembership`, {
                 userId: userId
             }, { headers: headers }),
-            axios.post('/api/chat/getchat', {
+            axios.post(`${baseUrl}/api/chat/getchat`, {
                 roomId: chatId
             }, { headers: headers }),
-            axios.get('/api/user/getallusers', { headers: headers })
+            axios.get(`${baseUrl}/api/user/getallusers`, { headers: headers })
             ])
             const data = res.data
             const chats = chatResponse.data
