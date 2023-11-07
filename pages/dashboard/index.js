@@ -36,6 +36,7 @@ export default Dashboard;
 export async function getServerSideProps(context) {
   const token = await context.req.cookies.token || null;
   if (!token) {
+    console.log("In not token");
     return {
       redirect: {
         destination: "/",
@@ -56,7 +57,7 @@ export async function getServerSideProps(context) {
     }, { headers: headers }),
     axios.get('/api/user/getallusers', { headers: headers })
     ])
-
+    console.log(res.request);
     const data = res.data
     const users = usersData.data
     return {
@@ -70,6 +71,7 @@ export async function getServerSideProps(context) {
     }
   }
   catch (e) {
+    console.log("In error");
     // context.res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly');
     return {
       redirect: {
