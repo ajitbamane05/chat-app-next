@@ -9,15 +9,14 @@ import ChatMessages from '@/Component/ChatMessages';
 import PrimarySearchAppBar from '@/Component/PrimarySearchAppBar';
 import ChatUser from '@/Component/ChatUser';
 
-const Chat = ({ senderId, chatId, chats, data, users, username, headers, actualToken }) => {
+const Chat = ({ senderId, chatId, chats, data, users, headers, actualToken }) => {
 
     const [message, setMessage] = useState('');
     const [chat, setChat] = useState(chats)
     const [socket, setSocket] = useState(null);
-
     useEffect(() => {
-
-        const socketInstance = io('/', { withCredentials: true });
+        const socketInstance = io(process.env.NODE_ENV === 'development' ? 'http://localhost:3002' : '/', 
+        { withCredentials: true });
         socketInstance.emit('joinRoom', chatId, senderId);
         socketInstance.on('chat', (payload) => {
             setChat((chat) => [...chat, payload])
@@ -33,7 +32,8 @@ const Chat = ({ senderId, chatId, chats, data, users, username, headers, actualT
     const sendChat = async (e) => {
         e.preventDefault()
         const now = new Date();
-        await axios.post(`/api/chat/sendmessage`, { content: message, senderId: senderId, roomId: chatId }, { headers: headers })
+        await axios.post(process.env.NODE_ENV === 'development' ?'http://localhost:3000/api/chat/sendmessage' :`/api/chat/sendmessage`, 
+        { content: message, senderId: senderId, roomId: chatId }, { headers: headers })
             .then(response => {
                 response.data
             })
@@ -52,7 +52,7 @@ const Chat = ({ senderId, chatId, chats, data, users, username, headers, actualT
     return (
         <div>
             <Box sx={{ display: 'flex' }}>
-                <PrimarySearchAppBar username={username} actualToken={actualToken} userId={senderId} />
+                <PrimarySearchAppBar  actualToken={actualToken} userId={senderId} />
                 <Box
                     component="main"
                     sx={{ flexGrow: 1, bgcolor: 'background.default' }}
@@ -95,7 +95,6 @@ export async function getServerSideProps(context) {
 
             const username = data1.username
             const chatId = context.params.chatId
-
             const senderId = userId
             const [res, chatResponse, usersData] = await Promise.all([axios.post(`${baseUrl}/api/room/getmembership`, {
                 userId: userId

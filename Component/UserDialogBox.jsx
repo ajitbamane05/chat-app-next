@@ -15,9 +15,9 @@ export default function UserDialogBox({ users, onClose, open }) {
     const handleClose = () => {
         onClose();
     };
+    
 
     return (<>
-
         <Dialog onClose={handleClose} open={open}>
             <DialogTitle>Start A new Chat</DialogTitle>
             <List sx={{ pt: 0 }}>

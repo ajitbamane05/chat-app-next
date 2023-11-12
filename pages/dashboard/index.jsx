@@ -6,11 +6,19 @@ import ChatUserList from '@/Component/ChatUserList';
 import axios from 'axios'
 import PrimarySearchAppBar from "@/Component/PrimarySearchAppBar";
 import Stack from '@mui/material/Stack';
+import UserContext from '@/Component/Context/userContext';
+import { useContext , useEffect} from 'react';
+
 const Dashboard = ({ data, username, users, actualToken, userId }) => {
+  const {setUser} = useContext(UserContext)
+  useEffect(()=>{
+    setUser({users,username})
+  },[])
+  
   return (
     <div>
       <Box sx={{ display: 'flex' }}>
-        <PrimarySearchAppBar username={username} actualToken={actualToken} userId={userId} />
+        <PrimarySearchAppBar  actualToken={actualToken} userId={userId} />
         <Box
           component="main"
           sx={{ flexGrow: 1, bgcolor: 'background.default' }}
@@ -76,7 +84,7 @@ export async function getServerSideProps(context) {
     }
   }
   catch (e) {
-    // context.res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly');
+    context.res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly');
     return {
       redirect: {
         destination: "/",
