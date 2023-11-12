@@ -58,18 +58,21 @@ export default function PrimarySearchAppBar({ username = "USERNAME", userId, act
     setMobileMoreAnchorEl(event.currentTarget);
   };
   const Logout = async (e) => {
-    try{
+    try {
       e.preventDefault()
-      const res = await axios.post('/api/logout', {
-        userId:userId,
-        token: actualToken
-      })
+
+      const res = await axios.post(
+        process.env.NODE_ENV === 'development' ? `http://localhost:3000/api/logout` : '/api/logout',
+        {
+          userId: userId,
+          token: actualToken
+        })
       if (res.status === 200) {
         Cookies.remove('token')
         router.push("/")
       }
     }
-    catch(error){
+    catch (error) {
       return new Error(error.message)
     }
   }
@@ -94,7 +97,7 @@ export default function PrimarySearchAppBar({ username = "USERNAME", userId, act
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       <MenuItem
-      onClick={Logout}
+        onClick={Logout}
       //  onClick={()=> signOut({ redirect: false }).then(() => {
       //       router.push("/");
       //   })}

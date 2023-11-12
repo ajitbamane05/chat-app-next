@@ -82,7 +82,8 @@ export async function getServerSideProps(context) {
     const isHttps = context.req.headers['x-forwarded-proto'] === 'https';
     const host = context.req.headers.host
     const protocol = isHttps ? 'https://' : 'http://';
-    const baseUrl = `${protocol}${host}`;
+    let baseUrl;
+    process.env.NODE_ENV === 'development' ? baseUrl = `http://localhost:3000` : baseUrl = `${protocol}${host}`;
     if (token) {
         try {
             const headers = {
