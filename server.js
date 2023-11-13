@@ -13,14 +13,14 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
    socket.on('joinRoom', (roomId,senderId) => {
     socket.join(roomId);
-    console.log("joined room",senderId);
+    // console.log("joined room",senderId);
     // console.log(`User ${senderId} joined room ${roomId}`);
   });
 
   // Leave a specific room
   socket.on('leaveRoom', (roomId,senderId,) => {
     socket.leave(roomId);
-    console.log("Left room",senderId);
+    // console.log("Left room",senderId);
     // console.log(`User ${senderId} left room ${roomId}`);
   });
 

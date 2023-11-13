@@ -27,7 +27,7 @@ app.use((err, req, res, next) => {
 app.get('/', (req, res) => {
     res.status(200).json({ message: "Hello from backend" })
 })
-console.log(dev);
+
 app.use(dev ? '/api/' : '/', authRoutes);
 app.use(dev ? '/api/user' : '/user', userRoutes);
 app.use(dev ? '/api/chat' : '/chat', chatRoutes);

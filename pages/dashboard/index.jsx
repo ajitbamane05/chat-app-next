@@ -48,7 +48,6 @@ export async function getServerSideProps(context) {
   const protocol = isHttps ? 'https://' : 'http://';
   let baseUrl ;
   process.env.NODE_ENV==='development'? baseUrl=`http://localhost:3000` : baseUrl=`${protocol}${host}`;
-  console.log(baseUrl);
   if (!token) {
     return {
       redirect: {

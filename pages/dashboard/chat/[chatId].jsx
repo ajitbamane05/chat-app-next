@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import axios from 'axios';
 import Toolbar from '@mui/material/Toolbar';
@@ -8,8 +7,13 @@ const Jwt = require('jsonwebtoken')
 import ChatMessages from '@/Component/ChatMessages';
 import PrimarySearchAppBar from '@/Component/PrimarySearchAppBar';
 import ChatUser from '@/Component/ChatUser';
-
-const Chat = ({ senderId, chatId, chats, data, users, headers, actualToken }) => {
+import {useState, useContext , useEffect} from 'react';
+import UserContext from '@/Component/Context/userContext';
+const Chat = ({ senderId, chatId, chats, data, users,username, headers, actualToken }) => {
+    const {setUser} = useContext(UserContext)
+  useEffect(()=>{
+    setUser({users,username})
+  },[])
 
     const [message, setMessage] = useState('');
     const [chat, setChat] = useState(chats)
@@ -20,7 +24,6 @@ const Chat = ({ senderId, chatId, chats, data, users, headers, actualToken }) =>
         socketInstance.emit('joinRoom', chatId, senderId);
         socketInstance.on('chat', (payload) => {
             setChat((chat) => [...chat, payload])
-            // console.log(socketInstance);
         })
         setSocket(socketInstance);
         return () => {
@@ -52,7 +55,7 @@ const Chat = ({ senderId, chatId, chats, data, users, headers, actualToken }) =>
     return (
         <div>
             <Box sx={{ display: 'flex' }}>
-                <PrimarySearchAppBar  actualToken={actualToken} userId={senderId} />
+                <PrimarySearchAppBar username={username}  actualToken={actualToken} userId={senderId} />
                 <Box
                     component="main"
                     sx={{ flexGrow: 1, bgcolor: 'background.default' }}
