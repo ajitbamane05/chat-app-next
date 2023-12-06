@@ -39,7 +39,6 @@ model RoomMember {
   userId       String
   roomId       String
   isAdmin      Boolean @default(false)
-  // @@id([userId, roomId])
 }
 
 model Message {

@@ -44,5 +44,5 @@ function deleteRoom(room_id){
 }
 
 module.exports = {
-    findRoomWithUsers, createRoom ,deleteRoom
+    findRoomWithUsers, createRoom ,deleteRoom,createDirectRoom
 }

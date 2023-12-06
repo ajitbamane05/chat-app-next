@@ -2,10 +2,10 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-export default function SigIn({submitData,handleNameChange,handlePassChange,handleSignUp}) {
+export default function SigIn({handleSubmit,register,submitData,handleSignUp}) {
     const styles = {
         input: {
-          color: "black", // Set your desired font color here
+          color: "black", 
         },
         bg: {
           borderColor: "black",
@@ -18,14 +18,13 @@ export default function SigIn({submitData,handleNameChange,handlePassChange,hand
                 <TextField
                     id="outlined-basic"
                     label="Username"
-                    onChange={handleNameChange}
+                    {...register('username',{required:"Username is required!",})}
                     InputLabelProps={{
                         style: styles.input,
                     }}
                     InputProps={{
                         style: styles.bg,
                     }}
-                    // color="black"
                     focused
                     autoComplete="off"
                 />
@@ -33,14 +32,14 @@ export default function SigIn({submitData,handleNameChange,handlePassChange,hand
             <Stack item>
                 <TextField
                     id="outlined-password-input"
-                    onChange={handlePassChange}
+                    {...register('password',{required:"Password is required"})}
                     label="Password"
                     type="password"
                     autoComplete="current-password"
                 />
             </Stack>
             <Stack>
-                <Button variant='contained' onClick={submitData} >
+                <Button variant='contained' onClick={handleSubmit(submitData)} >
                     Sign in
                 </Button>
             </Stack>

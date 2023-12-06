@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 
-export default function Signup({createAccount,handleNameChange,handlePassChange,handleEmailChange,handleSignUp}) {
+export default function Signup({createAccount,handleSignUp,register,handleSubmit}) {
     const styles = {
         input: {
           color: "black", // Set your desired font color here
@@ -17,8 +17,8 @@ export default function Signup({createAccount,handleNameChange,handlePassChange,
             <Stack item>
                 <TextField
                     id="outlined-basic"
+                    {...register("username", {required: "Username is required!"})}
                     label="Username"
-                    onChange={handleNameChange}
                     InputLabelProps={{
                         style: styles.input,
                     }}
@@ -31,9 +31,9 @@ export default function Signup({createAccount,handleNameChange,handlePassChange,
             <Stack item>
                 <TextField
                     id="outlined-basic"
+                    {...register("email", {required: "Email is required!",minLength:5})}
                     label="Email"
                     type='email'
-                    onChange={handleEmailChange}
                     InputLabelProps={{
                         style: styles.input,
                     }}
@@ -46,7 +46,7 @@ export default function Signup({createAccount,handleNameChange,handlePassChange,
             <Stack item>
                 <TextField
                     id="outlined-password-input"
-                    onChange={handlePassChange}
+                    {...register("password",{required:"Password is required!",minLength:5})}
                     label="New Password"
                     type="password"
                     InputLabelProps={{
@@ -59,7 +59,7 @@ export default function Signup({createAccount,handleNameChange,handlePassChange,
                 />
             </Stack>
             <Stack>
-                <Button variant='contained' onClick={createAccount} >
+                <Button variant='contained' onClick={handleSubmit(createAccount)} >
                     Create account
                 </Button>
             </Stack>

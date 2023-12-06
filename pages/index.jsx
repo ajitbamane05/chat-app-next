@@ -9,69 +9,68 @@ import SigIn from '@/Component/SignIn';
 import SignSignUpWrapper from '@/Component/Wrappers/SIgnSignUpWrapper';
 import BgImageWrapper from "@/Component/Wrappers/BgImageWrapper";
 import Signup from "@/Component/Signup";
+import { useForm } from "react-hook-form"
+
 export default function Home() {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+    setError,
+    reset
+  } = useForm()
+
   const router = useRouter();
   const [signIn, setSignIn] = useState(true)
-  const [username, setUsername] = useState();
-  const [password, setPassword] = useState();
-  const [email, setEmail] = useState();
   const [message, setMessage] = useState("")
-  const [processing, setProcessing] = useState(false)
-
-  const submitData = async (e) => {
+  const submitData = async (data) => {
     try {
       setMessage("")
-      setProcessing(true)
-      e.preventDefault();
       const res = await axios.post(
         process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api/login' : '/api/login',
-        {
-          username: username,
-          password: password
-        })
+        data
+      )
       if (res.status === 200) {
         const token = await res.headers['authorization'];
         Cookies.set('token', token);
         router.push("/dashboard");
       }
       if (res.status === 401) {
-        setMessage("wrongCredentials")
-        setProcessing(false)
+        setError('WrongCred', {
+          message: "Wrong Credentials!"
+        })
       }
     }
     catch (error) {
-      setMessage("wrongCredentials")
-      setProcessing(false)
+      setError('WrongCred', {
+        message: "Wrong Credentials!"
+      })
+      setTimeout(() => reset(), 2000)
       return new Error(error.message)
     }
   };
 
-  const createAccount = async (e) => {
+  const createAccount = async (data) => {
     try {
       setMessage("")
-      setProcessing(true)
-      e.preventDefault();
       const res = await axios.post(
         process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api/user/createuser' : '/api/user/createuser',
-        {
-          username: username,
-          email: email,
-          password: password
-        })
+        data
+      )
       if (res.status === 200) {
         setMessage("AccountCreated")
-        setProcessing(false)
       }
       if (res.status === 400) {
-        console.log(res.message);
         setMessage(res.message)
-        console.log("In 400");
-        setProcessing(false)
       }
     }
     catch (error) {
       setMessage(error.response?.data.message)
-      setProcessing(false)
+      setTimeout(() => {
+        reset()
+        setMessage("")
+      }, 2000)
       return new Error(error.message)
     }
   };
@@ -80,48 +79,39 @@ export default function Home() {
     setSignIn(!signIn)
     setMessage("")
   }
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-    setMessage("")
-  }
-  const handleNameChange = (e) => {
-    setUsername(e.target.value);
-    setMessage("");
-  };
-  const handlePassChange = (e) => {
-    setPassword(e.target.value);
-    setMessage("");
-  };
 
   return (
     <>
       <BgImageWrapper />
       <SignSignUpWrapper>
-        {processing ? <><Alert severity="success">Processing...</Alert></> :
+        {isSubmitting ? <><Alert severity="success">Processing...</Alert></> :
           <> </>}
-        {message == "wrongCredentials" ? <><Alert severity="error">Wrong Credentials!</Alert></>
-          : message == "AccountCreated" ? <><Alert severity="success">Account Created Successfully!</Alert></>
-          : message == "Email already existed" ? <> <Alert severity="error">Email already existed!</Alert></>
-          : message == "Username already existed" ? <> <Alert severity="error">Username already existed!</Alert></>
-            : message == "AccuntError" ? <> <Alert severity="error">Error While Creating Account!</Alert></> : <></>}
+        {errors.WrongCred ? <><Alert severity="error">{errors.WrongCred.message}</Alert></> :
+          errors.username ? <><Alert severity="error">{errors.username.message}</Alert></> :
+            errors.email ? <><Alert severity="error">{errors.email.message ? errors.email.message : 'Email should exceed length 5'}</Alert></> :
+              errors.password ? <><Alert severity="error">{errors.password.message ? errors.password.message : 'Password should exceed length 5'}</Alert></> :
+                message == "AccountCreated" ? <><Alert severity="success">Account Created Successfully!</Alert></> :
+                  message == "Email already existed" ? <> <Alert severity="error">Email already existed!</Alert></> :
+                    message == "Username already existed" ? <> <Alert severity="error">Username already existed!</Alert></> :
+                      message == "AccuntError" ? <> <Alert severity="error">Error While Creating Account!</Alert></> : <></>
+        }
         {
-          signIn ? <><SigIn
-            submitData={submitData}
-            handleNameChange={handleNameChange}
-            handlePassChange={handlePassChange}
-            handleSignUp={handleSignUp}
-          /></> :
+          signIn ? <>
+            <SigIn
+              register={register}
+              handleSubmit={handleSubmit}
+              submitData={submitData}
+              handleSignUp={handleSignUp}
+            /></> :
             <>
               <Signup
+                register={register}
+                handleSubmit={handleSubmit}
                 createAccount={createAccount}
-                handleNameChange={handleNameChange}
-                handlePassChange={handlePassChange}
-                handleEmailChange={handleEmailChange}
                 handleSignUp={handleSignUp}
               />
             </>
         }
-
       </SignSignUpWrapper>
 
     </>
