@@ -12,7 +12,7 @@ export default function SignSignUpWrapper({children}) {
                 spacing={2}
                 sx={{ mb: 3, pt: 4, pb: 3, position: "absolute", top: "20vh", zIndex: 10 }}>
                 <Grid item xs={10} sm={5} md={3}>
-                    <Paper elevation={3} sx={{ bgcolor: 'rgba(255,255,255,0.7)' }}>
+                    <Paper elevation={3} sx={{ bgcolor: '#FFF'  }}>
                         <Box
                             component="form"
                             p={2} sx={{ pt: 3, pb: 2 }}

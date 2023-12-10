@@ -16,7 +16,7 @@ export default function Signup({createAccount,handleSignUp,register,handleSubmit
         <>
             <Stack item>
                 <TextField
-                    id="outlined-basic"
+                    id="outlined-basic-un"
                     {...register("username", {required: "Username is required!"})}
                     label="Username"
                     InputLabelProps={{
