@@ -19,7 +19,7 @@ const Chat = ({ senderId, chatId, chats, data, users,username, headers, actualTo
     const [chat, setChat] = useState(chats)
     const [socket, setSocket] = useState(null);
     useEffect(() => {
-        const socketInstance = io(process.env.NODE_ENV === 'development' ? 'http://localhost:3002' : '/', 
+        const socketInstance = io(process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : '/', 
         { withCredentials: true });
         socketInstance.emit('joinRoom', chatId, senderId);
         socketInstance.on('chat', (payload) => {
