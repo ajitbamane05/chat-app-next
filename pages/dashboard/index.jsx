@@ -10,9 +10,9 @@ import UserContext from '@/Component/Context/userContext';
 import { useContext , useEffect} from 'react';
 
 const Dashboard = ({ data, username, users, actualToken, userId }) => {
-  const {setUser} = useContext(UserContext)
+  const {setLoginUser} = useContext(UserContext)
   useEffect(()=>{
-    setUser({users,username})
+    setLoginUser({users,username,userId})
   },[])
   
   return (
@@ -60,6 +60,7 @@ export async function getServerSideProps(context) {
     const actualToken = token.split(' ')[1]
     const data1 = Jwt.verify(actualToken, process.env.SECRET)
     const userId = data1.user_id
+    
     const headers = {
       'authorization': token
     };

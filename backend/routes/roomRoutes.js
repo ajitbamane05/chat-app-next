@@ -5,7 +5,9 @@ const { Authentication } = require('../middleware');
 const { Authorization } = require('../middleware')
 const router = express.Router();
 
-router.post('/createdirectroom', Authentication.checkIfAuthenticated, RoomHandler.createDirectRoom)
+router.post('/createdirectroom', 
+// Authentication.checkIfAuthenticated, 
+RoomHandler.createDirectRoom)
 router.post('/createroom', Authentication.checkIfAuthenticated, Authorization.checkIfAuthorised, RoomHandler.creteRoom);
 router.post('/deleteroom', Authentication.checkIfAuthenticated, Authorization.checkIfAuthorised, RoomHandler.deleteRoom);
 router.post('/getmembership', Authentication.checkIfAuthenticated, RoomMemberHandler.getMemberships);

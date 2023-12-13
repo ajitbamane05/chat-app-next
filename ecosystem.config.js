@@ -19,11 +19,7 @@ module.exports = {
         NODE_ENV: 'production'
       },
       interpreter: 'none'
-    },
-    // {
-    //   name: 'socketServer',
-    //   script: './server.js',
-    // }
+    }
   ],
 
   deploy: {

@@ -3,7 +3,8 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Link from 'next/link';
-function ChatUser({ rooms }) {
+
+function ChatUser() {
     return (
         <>
             <Paper sx={{ p: 1, mt: 1, height: '80vh',display: 'fixed' }}>

@@ -14,7 +14,7 @@ export default function Signup({createAccount,handleSignUp,register,handleSubmit
       };
     return (
         <>
-            <Stack item>
+            <Stack >
                 <TextField
                     id="outlined-basic-un"
                     {...register("username", {required: "Username is required!"})}
@@ -28,7 +28,7 @@ export default function Signup({createAccount,handleSignUp,register,handleSubmit
                     autoComplete="off"
                 />
             </Stack>
-            <Stack item>
+            <Stack >
                 <TextField
                     id="outlined-basic"
                     {...register("email", {required: "Email is required!",minLength:5})}
@@ -43,7 +43,7 @@ export default function Signup({createAccount,handleSignUp,register,handleSubmit
                     autoComplete="off"
                 />
             </Stack>
-            <Stack item>
+            <Stack >
                 <TextField
                     id="outlined-password-input"
                     {...register("password",{required:"Password is required!",minLength:5})}

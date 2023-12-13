@@ -14,7 +14,7 @@ export default function SigIn({handleSubmit,register,submitData,handleSignUp}) {
       
     return (
         <>
-            <Stack item>
+            <Stack >
                 <TextField
                     id="outlined-basic"
                     label="Username"
@@ -29,7 +29,7 @@ export default function SigIn({handleSubmit,register,submitData,handleSignUp}) {
                     autoComplete="off"
                 />
             </Stack>
-            <Stack item>
+            <Stack >
                 <TextField
                     id="outlined-password-input"
                     {...register('password',{required:"Password is required"})}

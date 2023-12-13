@@ -16,6 +16,8 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import AddCommentIcon from '@mui/icons-material/AddComment';
 import { useState } from 'react';
 import UserDialogBox from './UserDialogBox';
+import Tooltip from '@mui/material/Tooltip';
+
 function ChatUserList({ rooms, users }) {
     const [open, setOpen] = useState(false);
     const handleClickOpen = () => {
@@ -57,9 +59,12 @@ function ChatUserList({ rooms, users }) {
                     </IconButton>
 
                     <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
+                    <Tooltip title="Start New Chat" placement="right" arrow>
+
                     <IconButton color="primary" sx={{ p: '10px' }} aria-label="directions" onClick={handleClickOpen}>
                         <AddCommentIcon />
                     </IconButton>
+                    </Tooltip>
                     <UserDialogBox
                         open={open}
                         onClose={handleClose}

@@ -25,10 +25,10 @@ function hashToColor(str) {
     return `rgb(${r}, ${g}, ${b})`;
 }
 export default function ChatMessages({ chat, sendChat, handleMessage, message, senderId, users }) {
-    const { user } = useContext(UserContext)
-        if(user){
+    const { loginUser } = useContext(UserContext)
+        if(loginUser){
             const updatedChats = chat.map((e) => {
-                const temp = user.users.find(user => user.user_id === e.senderId);
+                const temp = loginUser.users.find(loginUser => loginUser.user_id === e.senderId);
                 if (temp && temp.username) {
                     e.username = temp.username;
                 }

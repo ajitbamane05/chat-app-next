@@ -43,12 +43,12 @@ async function createDirectRoom(req, res) {
     if (type === "DIRECT") {
         const existingRoom = await RoomService.findRoomWithUsers(memberIds)
         if (existingRoom) {
-            return res.status(400).json({ message: "Room already exists with users" })
+            return res.status(206).json({ message: "Room already exists with users",existingRoom })
         }
         try {
             const newRoom = await RoomService.createDirectRoom(name)
             const newRoomMembers = await RoomMemberService.createRoomMembers(memberIds, newRoom.room_id)
-            return res.status(200).json({ message: "Direct Chat Created", newRoomMembers })
+            return res.status(200).json({ message: "Direct Chat Created", newRoom })
         }
         catch (error) {
             return res.status(400).json({ message: "Error While Creating Direct Chat!", error: error.message })

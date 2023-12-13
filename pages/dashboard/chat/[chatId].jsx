@@ -10,9 +10,9 @@ import ChatUser from '@/Component/ChatUser';
 import {useState, useContext , useEffect} from 'react';
 import UserContext from '@/Component/Context/userContext';
 const Chat = ({ senderId, chatId, chats, data, users,username, headers, actualToken }) => {
-    const {setUser} = useContext(UserContext)
+    const {setLoginUser} = useContext(UserContext)
   useEffect(()=>{
-    setUser({users,username})
+    setLoginUser({users,username})
   },[])
 
     const [message, setMessage] = useState('');

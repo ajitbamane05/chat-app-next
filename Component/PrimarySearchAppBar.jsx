@@ -22,30 +22,26 @@ export default function PrimarySearchAppBar({userId, actualToken }) {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-  const { user } = useContext(UserContext)
+  const { loginUser } = useContext(UserContext)
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
   };
-
   const handleMenuClose = () => {
     setAnchorEl(null);
     handleMobileMenuClose();
   };
-
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
   const Logout = async (e) => {
     try {
       e.preventDefault()
-
       const res = await axios.post(
         process.env.NODE_ENV === 'development' ? `http://localhost:3000/api/logout` : '/api/logout',
         {
@@ -138,7 +134,7 @@ export default function PrimarySearchAppBar({userId, actualToken }) {
       </MenuItem>
     </Menu>
   );
-  if(user){
+  if(loginUser){
     return (
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="fixed">
@@ -158,7 +154,7 @@ export default function PrimarySearchAppBar({userId, actualToken }) {
               component="div"
               sx={{ display: { xs: 'none', sm: 'block' } }}
             >
-              CHATBOX ({user.username.toUpperCase()})
+              CHATBOX ({loginUser.username.toUpperCase()})
             </Typography>
   
             <Box sx={{ flexGrow: 1 }} />
