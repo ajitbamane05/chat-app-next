@@ -20,7 +20,9 @@ function UserDialogBox({ users, onClose, open }) {
     const { loginUser } = useContext(UserContext)
     async function startNewChat(inputName, InputType, otherUser, currentUser) {
         try {
-            const response = await axios.post('http://localhost:3000/api/room/createdirectroom', {
+            const response = await axios.post(
+                process.env.NODE_ENV === 'development' ? `http://localhost:3000/api/room/createdirectroom` : '/api/room/createdirectroom',
+                {
                 name: inputName,
                 type: InputType,
                 memberIds: [otherUser, currentUser],
