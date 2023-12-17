@@ -1,7 +1,8 @@
 const { RoomMemberService } = require('../service')
 
 async function getMemberships(req, res) {
-    const { userId } = req.body
+    const { userId } = req.params
+    console.log(userId);
     if (!userId) {
         return res.status(400).json({ message: "User Id not provided" })
     }

@@ -24,90 +24,92 @@ function hashToColor(str) {
     const b = hash & 0x0000FF;
     return `rgb(${r}, ${g}, ${b})`;
 }
-export default function ChatMessages({ chat, sendChat, handleMessage, message, senderId, users }) {
+export default function ChatMessages({ chat, sendChat, handleMessage, message, senderId }) {
     const { loginUser } = useContext(UserContext)
-        if(loginUser){
-            const updatedChats = chat.map((e) => {
-                const temp = loginUser.users.find(loginUser => loginUser.user_id === e.senderId);
-                if (temp && temp.username) {
-                    e.username = temp.username;
-                }
-                return e;
-            });
-            const endOfList = useRef(null);
-            useEffect(() => {
-                if (endOfList.current) {
-                    endOfList.current.scrollIntoView({ behavior: 'smooth' });
-                }
-            }, [chat]);
-    
-            return (
-                <>
-                    <Stack direction='column' sx={{ width: '60vw' }}>
-                        <Stack>
-                            <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                                {updatedChats.map((payload, index) => {
-                                    const now = new Date(payload.createdAt);
-                                    const hours = String(now.getHours()).padStart(2, '0');
-                                    const minutes = String(now.getMinutes()).padStart(2, '0');
-                                    const time2 = `${hours}:${minutes}`;
-    
-                                    return (
-                                        senderId == payload.senderId ?
-                                            <Paper
-                                                key={payload.message_id}
-                                                sx={{ width: 450, height: 50, p: 1, mb: 2, ml: 20, display: 'flex', alignItems: 'end', bgcolor: '#F2F9ED' }}
-                                                ref={index === chat.length - 1 ? endOfList : null}
-                                            >
-                                                <ListItem>
-                                                    <ListItemText primary={payload.content} sx={{ flexGrow: 2 }} />
-                                                    <Stack direction='row' sx={{}}>
-                                                        <Stack sx={{ flexGrow: 1 }}>
-                                                        </Stack>
-                                                        <Stack>
-                                                            <Typography variant="caption" component="div" sx={{ flexGrow: 1, mt: 2 }}><span>{time2}</span> </Typography>
-                                                        </Stack>
-                                                    </Stack>
-                                                </ListItem>
-                                            </Paper> :
-    
-                                            <Paper
-                                                key={payload.message_id}
-                                                sx={{ width: 450, height: 50, ml: 4, p: 1, mb: 2, }}
-                                                ref={index === chat.length - 1 ? endOfList : null}
-                                            >
-                                                <ListItem>
-                                                    <Typography variant="caption" component="span" style={{ color: hashToColor(payload.senderId), fontWeight: 'bold' }} sx={{ position: 'relative', bottom: '25px', right: '10px' }}>{payload.username}</Typography>
-                                                    <ListItemText primary={payload.content} sx={{}} />
-                                                    <Stack direction='row' sx={{ pt: 1 }}>
-                                                        <Stack sx={{ flexGrow: 1 }}>
-                                                        </Stack>
-                                                        <Stack>
-                                                            <Typography variant="caption" component="div" sx={{ flexGrow: 1, mt: 2 }}><span>{time2}</span> </Typography>
-                                                        </Stack>
-                                                    </Stack>
-                                                </ListItem>
-                                            </Paper>
-                                    )
-                                })}
-                            </List>
-                        </Stack>
-                        <Stack width={400}>
-                            <form id="form" onSubmit={sendChat} style={{ width: '58vw' }}>
-                                <input
-                                    id="input"
-                                    type='text'
-                                    name='chat '
-                                    autoComplete="off"
-                                    value={message}
-                                    onChange={handleMessage}
-                                />
-                                <button type="submit">Send</button>
-                            </form>
-                        </Stack>
-    
-                    </Stack>
-                </>
-            )
+    const endOfList = useRef(null);
+    useEffect(() => {
+        if (endOfList.current) {
+            endOfList.current.scrollIntoView({ behavior: 'smooth' });
         }
+    }, [chat,sendChat]);
+
+    if (loginUser) {
+        const updatedChats = chat.map((e) => {
+            const temp = loginUser.users.find(loginUser => loginUser.user_id === e.senderId);
+            if (temp && temp.username) {
+                e.username = temp.username;
+            }
+            return e;
+        });
+
+
+        return (
+            <>
+                <Stack direction='column' sx={{ width: '60vw' }}>
+                    <Stack>
+                        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                            {updatedChats.map((payload, index) => {
+                                const now = new Date(payload.createdAt);
+                                const hours = String(now.getHours()).padStart(2, '0');
+                                const minutes = String(now.getMinutes()).padStart(2, '0');
+                                const time2 = `${hours}:${minutes}`;
+
+                                return (
+                                    senderId == payload.senderId ?
+                                        <Paper
+                                            key={payload.message_id}
+                                            sx={{ width: 450, height: 50, p: 1, mb: 2, ml: 20, display: 'flex', alignItems: 'end', bgcolor: '#F2F9ED' }}
+                                            ref={index === chat.length - 1 ? endOfList : null}
+                                        >
+                                            <ListItem>
+                                                <ListItemText primary={payload.content} sx={{ flexGrow: 2 }} />
+                                                <Stack direction='row' sx={{}}>
+                                                    <Stack sx={{ flexGrow: 1 }}>
+                                                    </Stack>
+                                                    <Stack>
+                                                        <Typography variant="caption" component="div" sx={{ flexGrow: 1, mt: 2 }}><span>{time2}</span> </Typography>
+                                                    </Stack>
+                                                </Stack>
+                                            </ListItem>
+                                        </Paper> :
+
+                                        <Paper
+                                            key={payload.message_id}
+                                            sx={{ width: 450, height: 50, ml: 4, p: 1, mb: 2, }}
+                                            ref={index === chat.length - 1 ? endOfList : null}
+                                        >
+                                            <ListItem>
+                                                <Typography variant="caption" component="span" style={{ color: hashToColor(payload.senderId), fontWeight: 'bold' }} sx={{ position: 'relative', bottom: '25px', right: '10px' }}>{payload.username}</Typography>
+                                                <ListItemText primary={payload.content} sx={{}} />
+                                                <Stack direction='row' sx={{ pt: 1 }}>
+                                                    <Stack sx={{ flexGrow: 1 }}>
+                                                    </Stack>
+                                                    <Stack>
+                                                        <Typography variant="caption" component="div" sx={{ flexGrow: 1, mt: 2 }}><span>{time2}</span> </Typography>
+                                                    </Stack>
+                                                </Stack>
+                                            </ListItem>
+                                        </Paper>
+                                )
+                            })}
+                        </List>
+                    </Stack>
+                    <Stack width={400}>
+                        <form id="form" onSubmit={sendChat} style={{ width: '58vw' }}>
+                            <input
+                                id="input"
+                                type='text'
+                                name='chat '
+                                autoComplete="off"
+                                value={message}
+                                onChange={handleMessage}
+                            />
+                            <button type="submit">Send</button>
+                        </form>
+                    </Stack>
+
+                </Stack>
+            </>
+        )
     }
+}

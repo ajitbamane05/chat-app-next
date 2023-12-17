@@ -10,7 +10,7 @@ router.post('/createdirectroom',
 RoomHandler.createDirectRoom)
 router.post('/createroom', Authentication.checkIfAuthenticated, Authorization.checkIfAuthorised, RoomHandler.creteRoom);
 router.post('/deleteroom', Authentication.checkIfAuthenticated, Authorization.checkIfAuthorised, RoomHandler.deleteRoom);
-router.post('/getmembership', Authentication.checkIfAuthenticated, RoomMemberHandler.getMemberships);
+router.get('/getmembership/:userId', Authentication.checkIfAuthenticated, RoomMemberHandler.getMemberships);
 router.post('/addroommember', Authentication.checkIfAuthenticated, Authorization.checkIfAuthorised, RoomMemberHandler.addRoomMember)
 router.post('/removeroommember', Authentication.checkIfAuthenticated, Authorization.checkIfAuthorised, RoomMemberHandler.removeRoomMember)
 

@@ -24,9 +24,9 @@ module.exports = {
 
   deploy: {
     production: {
-      user: 'root',
-      key:'droplet-ssh',
-      host:'64.227.139.116',
+      user: 'ubuntu',
+      key:'gcp-ssh-key',
+      host:'34.41.4.236',
       ref: 'origin/main',
       repo: 'git@github.com:ajitbamane05/chat-app-next.git',
       path: '/home/ubuntu',

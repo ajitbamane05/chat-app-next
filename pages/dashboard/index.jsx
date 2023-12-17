@@ -3,22 +3,22 @@ const Jwt = require('jsonwebtoken')
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import ChatUserList from '@/Component/ChatUserList';
-import axios from 'axios'
 import PrimarySearchAppBar from "@/Component/PrimarySearchAppBar";
 import Stack from '@mui/material/Stack';
 import UserContext from '@/Component/Context/userContext';
-import { useContext , useEffect} from 'react';
+import { useContext, useEffect } from 'react';
+import { axiosGetHandler } from '@/utils/axiosHandler'
 
 const Dashboard = ({ data, username, users, actualToken, userId }) => {
-  const {setLoginUser} = useContext(UserContext)
-  useEffect(()=>{
-    setLoginUser({users,username,userId})
-  },[])
-  
+  const { setLoginUser } = useContext(UserContext)
+  useEffect(() => {
+    setLoginUser({ users, username, userId })
+  }, [])
+
   return (
     <div>
       <Box sx={{ display: 'flex' }}>
-        <PrimarySearchAppBar  actualToken={actualToken} userId={userId} />
+        <PrimarySearchAppBar actualToken={actualToken} userId={userId} />
         <Box
           component="main"
           sx={{ flexGrow: 1, bgcolor: 'background.default' }}
@@ -43,11 +43,6 @@ export default Dashboard;
 
 export async function getServerSideProps(context) {
   const token = await context.req.cookies.token || null;
-  const isHttps = context.req.headers['x-forwarded-proto'] === 'https';
-  const host = context.req.headers.host
-  const protocol = isHttps ? 'https://' : 'http://';
-  let baseUrl ;
-  process.env.NODE_ENV==='development'? baseUrl=`http://localhost:3000` : baseUrl=`${protocol}${host}`;
   if (!token) {
     return {
       redirect: {
@@ -60,15 +55,13 @@ export async function getServerSideProps(context) {
     const actualToken = token.split(' ')[1]
     const data1 = Jwt.verify(actualToken, process.env.SECRET)
     const userId = data1.user_id
-    
     const headers = {
       'authorization': token
     };
     const username = data1.username
-    const [res, usersData] = await Promise.all([axios.post(`${baseUrl}/api/room/getmembership`, {
-      userId: userId
-    }, { headers: headers }),
-    axios.get(`${baseUrl}/api/user/getallusers`, { headers: headers })
+    const [res, usersData] = await Promise.all([
+      axiosGetHandler(context, `/api/room/getmembership/${userId}`, { headers: headers }),
+      axiosGetHandler(context, '/api/user/getallusers', { headers: headers })
     ])
 
     const data = res.data

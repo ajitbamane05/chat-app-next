@@ -17,7 +17,7 @@ async function sendMessage(req, res) {
 }
 
 async function getChat(req, res) {
-    const { roomId } = req.body
+    const { roomId } = req.params
     if (!roomId) {
         return res.status(400).json({ message: "Room id not found" })
     }

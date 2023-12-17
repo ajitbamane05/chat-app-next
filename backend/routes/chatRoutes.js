@@ -6,7 +6,7 @@ const { Authentication } = require('../middleware');
 const { Authorization } = require('../middleware');
 
 router.post('/sendmessage', Authentication.checkIfAuthenticated, Authorization.authorisedSender, MessageHandler.sendMessage);
-router.post('/getchat', Authentication.checkIfAuthenticated, MessageHandler.getChat);
+router.get('/getchat/:roomId', Authentication.checkIfAuthenticated, MessageHandler.getChat);
 router.post('/deletemessage', Authentication.checkIfAuthenticated, MessageHandler.deleteMessage);
 
 

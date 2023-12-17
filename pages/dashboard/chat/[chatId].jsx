@@ -1,5 +1,4 @@
 import io from 'socket.io-client';
-import axios from 'axios';
 import Toolbar from '@mui/material/Toolbar';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
@@ -7,20 +6,21 @@ const Jwt = require('jsonwebtoken')
 import ChatMessages from '@/Component/ChatMessages';
 import PrimarySearchAppBar from '@/Component/PrimarySearchAppBar';
 import ChatUser from '@/Component/ChatUser';
-import {useState, useContext , useEffect} from 'react';
+import { useState, useContext, useEffect } from 'react';
 import UserContext from '@/Component/Context/userContext';
-const Chat = ({ senderId, chatId, chats, data, users,username, headers, actualToken }) => {
-    const {setLoginUser} = useContext(UserContext)
-  useEffect(()=>{
-    setLoginUser({users,username})
-  },[])
+import { axiosPostHandler, axiosGetHandler } from '@/utils/axiosHandler'
+const Chat = ({ senderId, chatId, chats, data, users, username, headers, actualToken }) => {
+    const { setLoginUser } = useContext(UserContext)
+    useEffect(() => {
+        setLoginUser({ users, username })
+    }, [])
 
     const [message, setMessage] = useState('');
     const [chat, setChat] = useState(chats)
     const [socket, setSocket] = useState(null);
     useEffect(() => {
-        const socketInstance = io(process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : '/', 
-        { withCredentials: true });
+        const socketInstance = io(process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : '/',
+            { withCredentials: true });
         socketInstance.emit('joinRoom', chatId, senderId);
         socketInstance.on('chat', (payload) => {
             setChat((chat) => [...chat, payload])
@@ -35,8 +35,7 @@ const Chat = ({ senderId, chatId, chats, data, users,username, headers, actualTo
     const sendChat = async (e) => {
         e.preventDefault()
         const now = new Date();
-        await axios.post(process.env.NODE_ENV === 'development' ?'http://localhost:3000/api/chat/sendmessage' :`/api/chat/sendmessage`, 
-        { content: message, senderId: senderId, roomId: chatId }, { headers: headers })
+        await axiosPostHandler('/api/chat/sendmessage', { content: message, senderId: senderId, roomId: chatId }, { headers: headers })
             .then(response => {
                 response.data
             })
@@ -55,7 +54,7 @@ const Chat = ({ senderId, chatId, chats, data, users,username, headers, actualTo
     return (
         <div>
             <Box sx={{ display: 'flex' }}>
-                <PrimarySearchAppBar username={username}  actualToken={actualToken} userId={senderId} />
+                <PrimarySearchAppBar username={username} actualToken={actualToken} userId={senderId} />
                 <Box
                     component="main"
                     sx={{ flexGrow: 1, bgcolor: 'background.default' }}
@@ -82,11 +81,6 @@ export default Chat;
 
 export async function getServerSideProps(context) {
     const token = context.req.cookies.token || null;
-    const isHttps = context.req.headers['x-forwarded-proto'] === 'https';
-    const host = context.req.headers.host
-    const protocol = isHttps ? 'https://' : 'http://';
-    let baseUrl;
-    process.env.NODE_ENV === 'development' ? baseUrl = `http://localhost:3000` : baseUrl = `${protocol}${host}`;
     if (token) {
         try {
             const headers = {
@@ -95,17 +89,13 @@ export async function getServerSideProps(context) {
             const actualToken = token.split(' ')[1]
             const data1 = Jwt.verify(actualToken, process.env.SECRET)
             const userId = data1.user_id
-
             const username = data1.username
             const chatId = context.params.chatId
             const senderId = userId
-            const [res, chatResponse, usersData] = await Promise.all([axios.post(`${baseUrl}/api/room/getmembership`, {
-                userId: userId
-            }, { headers: headers }),
-            axios.post(`${baseUrl}/api/chat/getchat`, {
-                roomId: chatId
-            }, { headers: headers }),
-            axios.get(`${baseUrl}/api/user/getallusers`, { headers: headers })
+            const [res, chatResponse, usersData] = await Promise.all([
+                axiosGetHandler(context, `/api/room/getmembership/${userId}`, { headers: headers }),
+                axiosGetHandler(context, `/api/chat/getchat/${chatId}`, { headers: headers }),
+                axiosGetHandler(context, '/api/user/getallusers', { headers: headers })
             ])
             const data = res.data
             const chats = chatResponse.data
